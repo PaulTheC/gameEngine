@@ -1,0 +1,47 @@
+#version 150
+
+in vec3 position;
+in vec2 textureCoordinates;
+in vec3 normals;
+
+out vec2 pass_textureCoordinates;
+out vec3 pass_surfaceNormal;
+out vec3 pass_toLightVector[5];
+
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform vec3 lightPosition[5];
+uniform vec3 offset;
+
+void main(void){
+	
+	
+	float pi = 3.1415926535897932384626433832795f;
+	float radius = 3000;
+	float posX = position.x - inverse(viewMatrix)[3].x + offset.x;
+	float posY = position.y + offset.y;
+	float posZ = position.z - inverse(viewMatrix)[3].z + offset.z;
+	
+	//vec3 world = vec3(  sin(((position.x) / (2 * 3.1415926535897932384626433832795f * (radius + position.y))-0.25)) * 2 * 3.1415926535897932384626433832795) * (radius + position.y), 1f, sin(((position.z) / (2 * 3.1415926535897932384626433832795f * (radius + position.y))-0.25)) * 2 * 3.1415926535897932384626433832795) * (radius + position.y)
+	float x = sin(((posX) / ((2 * pi * (radius + posY))-0.25)) * 2 * pi) * (radius + posY);
+	float z = sin(((posZ) / ((2 * pi * (radius + posY))-0.25)) * 2 * pi) * (radius + posY);
+	
+	float y = cos((sqrt((posX)*(posX) + (posZ)*(posZ)) / (2 * pi * ((radius + posY))-0.25)) * 2 * pi) * (radius + posY) - radius;
+	
+
+	
+	
+	vec4 worldPosition = transformationMatrix * vec4(posX, posY, posZ ,1.0);
+	worldPosition = transformationMatrix * vec4(x + inverse(viewMatrix)[3].x - offset.x, y - offset.y, z + inverse(viewMatrix)[3].z - offset.z,1.0);
+
+	gl_Position = projectionMatrix * viewMatrix * worldPosition;
+	pass_textureCoordinates = textureCoordinates * 40;
+	
+	pass_surfaceNormal = (transformationMatrix * vec4(normals, 0.0)).xyz;
+	
+	for(int i = 0; i < 5; i++){
+		pass_toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+	}
+	
+}
