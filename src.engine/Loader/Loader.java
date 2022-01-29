@@ -72,7 +72,7 @@ public class Loader {
 		return texture.getTextureID();
 	}
 	
-	public void cleanUp(){
+	public static void cleanUp(){
 		for(int vao:vaos){
 			GL30.glDeleteVertexArrays(vao);
 		}
@@ -276,7 +276,7 @@ public class Loader {
 		
 	}
 	
-	public TexturedModel loadUIElement(String filename, int size_inHorizontalPercent, int x, int y) {
+	public static TexturedModel loadUIElement(String filename, int size_inHorizontalPercent, int x, int y) {
 		   File f = new File("res/"+filename+".png");
 		   BufferedImage image = null;
 			try {

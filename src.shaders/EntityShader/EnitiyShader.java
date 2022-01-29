@@ -12,8 +12,9 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import Camera.Camera;
+import Camera.MainCamera;
 import Engine.Main;
-import Entiys.Camera;
 import Entiys.Entity;
 import Lights.Light;
 import MainShader.StaticShader;
@@ -94,8 +95,8 @@ public class EnitiyShader extends StaticShader{
 	@Override
 	public void loadArguments(Entity entity) {
 		super.loadBoolean(location_hasTexture, entity.getModel().getHasTexture());
-		loadViewMatrix(Main.getCamera());
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), Main.getCamera(), false);
+		loadViewMatrix(MainCamera.getCamera());
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), MainCamera.getCamera(), false);
 		loadTransformationMatrix(transformationMatrix);
 		loadMaterial(entity);
 		

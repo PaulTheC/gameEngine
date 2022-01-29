@@ -10,18 +10,19 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import Camera.Camera;
 import EntityShader.EnitiyShader;
-import Entiys.Camera;
 import Entiys.Entity;
 import Entiys.EntityMaster;
-import Entiys.UIElement;
 import Lights.Light;
 import Lights.LightMaster;
 import MainShader.ShaderMaster;
 import MainShader.StaticShader;
 import Models.RawModel;
 import Models.TexturedModel;
+import Scenes.SceneManager;
 import Tools.Maths;
+import UIElements.UIElement;
 import UIElements.UIElementsMaster;
 import UIShader.UIShader;
 
@@ -59,7 +60,7 @@ public class Renderer {
 		
 		
 		//rendering
-		EntityMaster.renderAllEntitys();
+		EntityMaster.renderAllEntitys(SceneManager.getActiveScene());
 		
 		
 		//cleaning up

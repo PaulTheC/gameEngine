@@ -1,21 +1,25 @@
 package Entiys;
 
-import java.io.IOException;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import Lights.Light;
 
-public class Lamp extends Entity{
+public class EnlightedEntity extends Entity{
 	
 	private Light light;
 	private Vector3f offset = new Vector3f(0,0,0);
 	
 
-	public Lamp(String meshFile, String textureFile) throws IOException {
+	public EnlightedEntity(){
+		super();
+		light = new Light();
+	}
+	
+	public EnlightedEntity(String meshFile, String textureFile){
 		super(meshFile, textureFile);
 		light = new Light();
 	}
+	
 	
 	@Override
 	public void setPosition(Vector3f position) {
@@ -58,4 +62,8 @@ public class Lamp extends Entity{
 		light.setStrength(strength);
 	}
 	
+	public void setAttenuation(Vector3f attenuation) {
+		light.setAttenuation(attenuation);
+	}
+
 }

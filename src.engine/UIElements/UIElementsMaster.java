@@ -2,7 +2,6 @@ package UIElements;
 
 import java.util.ArrayList;
 
-import Entiys.UIElement;
 import Lights.Light;
 
 public class UIElementsMaster {

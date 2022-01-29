@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import Entiys.Camera;
+import Camera.Camera;
 import Entiys.Entity;
 import MainShader.StaticShader;
 import Models.RawModel;

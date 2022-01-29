@@ -12,8 +12,8 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import Camera.Camera;
 import Engine.Main;
-import Entiys.Camera;
 import Entiys.Entity;
 import Lights.Light;
 import MainShader.StaticShader;

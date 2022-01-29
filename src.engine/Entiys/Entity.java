@@ -1,11 +1,13 @@
 package Entiys;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.naming.ldap.HasControls;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import Components.Component;
 import Engine.Main;
 import EntityShader.EnitiyShader;
 import Loader.Loader;
@@ -23,7 +25,9 @@ public class Entity {
 	private float scale = 1;
 	private StaticShader programm;
 	private StaticMaterial material;
-
+	private ArrayList<Component> components = new ArrayList<>();
+	
+	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale, StaticShader programm) {
 		this.model = model;
@@ -36,6 +40,9 @@ public class Entity {
 		material = Main.material;
 		EntityMaster.addEntity(this);
 	}
+	
+	
+	
 	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale, StaticShader programm, StaticMaterial material) {
@@ -74,18 +81,32 @@ public class Entity {
 		EntityMaster.addEntity(this);
 	}
 	
-	public Entity(String objPath, String texturePath) throws IOException {
-		this.model = new TexturedModel(Loader.loadFromOBJ(objPath), texturePath);
+	public Entity(String objPath, String texturePath){
+		try {
+			this.model = new TexturedModel(Loader.loadFromOBJ(objPath), texturePath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.programm = Main.shader;
 		this.material = Main.material;
 		EntityMaster.addEntity(this);
 	}
 	
-	public Entity(String objPath) throws IOException {
-		this.model = new TexturedModel(Loader.loadFromOBJ(objPath));
+	public Entity(String objPath){
+		try {
+			this.model = new TexturedModel(Loader.loadFromOBJ(objPath));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.programm = Main.shader;
 		this.material = Main.material;
 		EntityMaster.addEntity(this);
+	}
+	
+	
+	public Entity(){
 	}
 
 	public void increasePosition(float dx, float dy, float dz) {
@@ -165,6 +186,22 @@ public class Entity {
 		this.material = material;
 	}
 	
+	public void onUpdate () {
+		for(Component c: components) {
+			if(true)
+				c.onUpdate(this);
+		}
+	}
 	
+	public void onStart() {
+		for(Component c: components) {
+			c.onStart(this);
+		}
+	}
+	
+	
+	public void addComponent(Component com) {
+		components.add(com);
+	}
 
 }

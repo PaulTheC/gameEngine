@@ -7,8 +7,8 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 
+import Camera.Camera;
 import EntityShader.EnitiyShader;
-import Entiys.Camera;
 import MainShader.StaticShader;
 
 public class DisplayManager {
@@ -16,6 +16,7 @@ public class DisplayManager {
 	public static final int WIDTH = 3000;
 	public static final int HEIGHT = 1500;
 	private static final int FPS_CAP = 30;
+	private static boolean requestClose = false;
 	
 	public static void createDisplay(){		
 		ContextAttribs attribs = new ContextAttribs(3,2)
@@ -37,14 +38,19 @@ public class DisplayManager {
 	public static void updateDisplay(){
 		
 		Display.update();
-		
+	}
+	
+	public static void requestClose() {
+		requestClose = true;
 	}
 	
 	
 	public static void closeDisplay(){
-		
 		Display.destroy();
-		
+	}
+	
+	public static boolean isCloseRequested() {
+		return requestClose != Display.isCloseRequested();
 	}
 	
 	

@@ -1,6 +1,7 @@
-package Entiys;
+package UIElements;
 
 import Engine.Renderer;
+import Entiys.Entity;
 import Loader.Loader;
 import MainShader.StaticShader;
 import Materials.DefaultMaterial;

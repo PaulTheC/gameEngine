@@ -1,4 +1,4 @@
-package Entiys;
+package Camera;
 
 import java.awt.AWTException;
 import java.awt.KeyEventDispatcher;
@@ -14,8 +14,11 @@ import org.lwjgl.util.vector.Vector3f;
 
 import Engine.DisplayManager;
 import Engine.Main;
-import Engine.MouseHandler;
 import Lights.Light;
+import Scenes.SceneManager;
+import Utilities.MouseHandler;
+import Utilities.Time;
+import testingScenes.TestScene;
 
 public class Camera {
 	
@@ -70,24 +73,24 @@ public class Camera {
 			sideSpeed = -SPEED / 2;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
-			position.y -= SPEED * Main.deltaTime;
+			position.y -= SPEED * Time.deltaTime;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-			position.y += SPEED * Main.deltaTime;
+			position.y += SPEED * Time.deltaTime;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
-			System.exit(0);
+			DisplayManager.requestClose();
 		}
 	
 		
-		float distance = currentSpeed * Main.deltaTime;
+		float distance = currentSpeed * Time.deltaTime;
 		float dx = (float) (distance * Math.sin(Math.toRadians(-yaw)));
 		float dz = (float) (distance * Math.cos(Math.toRadians(yaw)));
 		position.x += dx;
 		position.z += dz;
 		
 		
-		distance = sideSpeed * Main.deltaTime;
+		distance = sideSpeed * Time.deltaTime;
 		dx = (float) (distance * Math.sin(Math.toRadians(yaw)));
 		dz = (float) (distance * Math.cos(Math.toRadians(-yaw)));
 		position.x += dz;
@@ -96,7 +99,7 @@ public class Camera {
 		
 		//Colision detection
 		
-		//position.y = Main.map.getHeightOfTerrain(position.x, position.z)+2;
+		position.y = SceneManager.<TestScene>getActiveScene().map.getHeightOfTerrain(position.x, position.z)+2;
 		
 		
 		
