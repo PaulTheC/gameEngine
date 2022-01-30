@@ -3,6 +3,8 @@ package testingScenes;
 import org.lwjgl.util.vector.Vector3f;
 
 import Components.Component;
+import EntityPresets.Cube;
+import Entiys.Entity;
 import Lamps.Lantern;
 import Lights.Sun;
 import Movements.SunMovement;
@@ -16,6 +18,8 @@ public class TestScene extends Scene{
 	
 	public static Map map;
 	public static Sun sun;
+	public static Lantern lantern;
+	public static Entity[] cube;
 
 
 	public TestScene() {
@@ -24,8 +28,13 @@ public class TestScene extends Scene{
 		
 		map = new Map();
 		sun = new Sun();
+		cube = new Entity[100];
 		
-		Lantern lantern = new Lantern();
+		for(int i = 0; i < cube.length; i++) {
+			cube[i] = new Entity("cube");
+		}
+		
+		lantern = new Lantern();
 		lantern.increasePosition(1000, map.getHeightOfTerrain(1000, 200)+1, 200);
 		
 		Lantern lantern2 = new Lantern();

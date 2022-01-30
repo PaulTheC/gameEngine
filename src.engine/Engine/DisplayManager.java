@@ -29,6 +29,7 @@ public class DisplayManager {
 			Display.setTitle("Our First Display!");
 			Display.setResizable(true);
 			Display.setLocation(0, 0);
+			Display.setFullscreen(true);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}

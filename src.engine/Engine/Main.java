@@ -50,6 +50,7 @@ public class Main {
 	//public static Light[] lights = new Light[3];
 
 	public static void main(String[] args) throws IOException {
+		
 		DisplayManager.createDisplay();
 		MainCamera.init();
 		MouseHandler.initMouse();
@@ -61,9 +62,8 @@ public class Main {
 		Renderer renderer = new Renderer(MainCamera.getCamera());
 		material = new DefaultMaterial();
 
-		
+	
 		new TestScene();
-		
 		
 		UIElement crosshair = new UIElement("crosshair", uiShader);
 		

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class SceneManager{
 	
-	private static String activeScene = "";
+	private static String activeScene = "testScene";
 	private static ArrayList<Scene> scenes = new ArrayList<>();
 	
 	

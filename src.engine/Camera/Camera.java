@@ -13,11 +13,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import Engine.DisplayManager;
 import Engine.Main;
 import Engine.Renderer;
+import Entiys.Entity;
 import Lights.Light;
 import Scenes.SceneManager;
 import Utilities.MouseHandler;
@@ -34,6 +36,7 @@ public class Camera {
 	private float yStretching = (DisplayManager.HEIGHT / (float) Display.getHeight());
 	private float xStretching = (DisplayManager.WIDTH / (float) Display.getWidth());
 	private Light light;
+	private long time;
 	
 	private Robot robot;
 	
@@ -52,14 +55,14 @@ public class Camera {
 		} catch (AWTException e) {
 			e.printStackTrace();
 		}
-		
+	
 		
 	}
 	
 	public void move(){
 		
 		yaw += MouseHandler.getLastXMovement() * 0.04f;
-		pitch += MouseHandler.getLastYMovement() * -0.04f;
+		pitch = Math.min(Math.max(pitch + MouseHandler.getLastYMovement() * -0.04f, -90), 90);
 		
 		
 		float currentSpeed = 0;
@@ -107,8 +110,7 @@ public class Camera {
 		
 		//Colision detection
 		
-		position.y = SceneManager.<TestScene>getActiveScene().map.getHeightOfTerrain(position.x, position.z)+2;
-		
+		//position.y = SceneManager.<TestScene>getActiveScene().map.getHeightOfTerrain(position.x, position.z)+2;
 		
 		
 		
@@ -121,12 +123,24 @@ public class Camera {
 	
 
 	public void leftMouseDown() {
-
-		//casting a ray from the centre of the camera and calculating the intersection with the Terrain
-		Vector3f intersection = getTerrainIntersection(getFromCameraRay());
 		
-		if(intersection != null)
-			light.setPosition(intersection);
+		
+
+		time = System.currentTimeMillis();
+		//casting a ray from the centre of the camera and calculating the intersection with the Terrain
+		//Vector3f intersection = getTerrainIntersection(getFromCameraRay());
+		Vector3f ray = getFromCameraRay();
+		Vector3f pos = new Vector3f(getPosition().x, getPosition().y, getPosition().z);
+
+		for(int i = 0; i < TestScene.cube.length; i++) {
+			Vector3f f = new Vector3f(ray.x * -i * 10, ray.y * i * 10, ray.z * i * 10);
+			TestScene.cube[i].setPosition(Vector3f.add(pos, f, f));
+		}
+		
+		//TestScene.cube[0].setPosition(getPosition());
+		
+//		if(intersection != null)
+//			SceneManager.<TestScene>getActiveScene().cube.setPosition(intersection);
 
 	}
 
@@ -141,6 +155,7 @@ public class Camera {
 		
 		Vector3f intersection = new Vector3f(ray.x * -distance, ray.y * distance, ray.z * distance);
 		Vector3f.add(intersection, getPosition(), intersection);
+
 		
 		return distance != 0 ? intersection : null;
 		
@@ -150,16 +165,29 @@ public class Camera {
 	private float getDistanceOfPoint(int x, int y) {
 		FloatBuffer depthBuffer = BufferUtils.createFloatBuffer(Display.getWidth() * Display.getHeight());
 		GL11.glReadBuffer(GL11.GL_DEPTH);
-		GL11.glReadPixels(0, 0, Display.getWidth(), Display.getHeight(), GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT,depthBuffer);
-		float distance = getRealDepthFromSample(depthBuffer.get(Display.getWidth() * x + y -1), Renderer.NEAR_PLANE, Renderer.FAR_PLANE) ;
+		GL11.glReadPixels(0,0,Display.getWidth(), Display.getHeight(), GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, depthBuffer);
+		float distance = getRealDepthFromSample(depthBuffer.get(Display.getWidth() * x + y -1), Renderer.NEAR_PLANE, Renderer.FAR_PLANE);
 		return depthBuffer.get(Display.getWidth() * x + y -1) != 1 ? distance : 0;
+		
 	}
 	
 	public Vector3f getFromCameraRay() {
+	
+		Matrix4f m = new Matrix4f();
+		m.setIdentity();
+		Matrix4f.translate(new Vector3f(0,0,1), m, m);
+		Matrix4f.rotate((float) Math.toRadians(pitch), new Vector3f(0,0,1), m, m);
+		Matrix4f.rotate((float) Math.toRadians(yaw), new Vector3f(0,1,0), m, m);
+		//Matrix4f.rotate((float) Math.toRadians(roll), new Vector3f(0,0,1), m, m);
+		
+		System.out.println(new Vector3f(m.m10, m.m11, m.m12));
+		
 		float rx = (float)Math.sin((double)getYaw() * (double)(Math.PI / 180)) * -1 * (1-Math.abs((float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1));
-		float ry = (float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1;
+		float ry = (float)Math.sin((double)getPitch() * (double)(Math.PI / 180)) * -1;
 		float rz = (float)Math.cos((double)getYaw() * (double)(Math.PI / 180)) * -1 * (1- Math.abs((float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1));
-		return new Vector3f(rx, ry, rz);
+		
+		System.out.println(getPitch()+ "      "+ry);
+		return (Vector3f) new Vector3f(rx, m.m10, rz).normalise();
 	}
 	
 	
