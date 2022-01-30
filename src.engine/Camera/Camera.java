@@ -6,14 +6,18 @@ import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
+import java.nio.FloatBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import Engine.DisplayManager;
 import Engine.Main;
+import Engine.Renderer;
 import Lights.Light;
 import Scenes.SceneManager;
 import Utilities.MouseHandler;
@@ -35,6 +39,7 @@ public class Camera {
 	
 	
 	public final float SPEED = 100;
+	public final float RAY_LENGHT = 50;
 	
 	public Camera(){
 		
@@ -81,6 +86,9 @@ public class Camera {
 		if(Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
 			DisplayManager.requestClose();
 		}
+		
+		
+		
 	
 		
 		float distance = currentSpeed * Time.deltaTime;
@@ -110,9 +118,30 @@ public class Camera {
 	public Vector3f getPosition() {
 		return position;
 	}
+	
+	public void leftMouseDown() {
+		Vector3f ray = getFromCameraRay();
+		FloatBuffer depthBuffer = BufferUtils.createFloatBuffer(Display.getWidth() * Display.getHeight());
+		GL11.glReadBuffer(GL11.GL_DEPTH);
+		GL11.glReadPixels(0, 0, Display.getWidth(), Display.getHeight(), GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT,depthBuffer);
+		float distance = getRealDepthFromSample(depthBuffer.get(Display.getWidth() * Display.getHeight() / 2 + Display.getWidth() / 2), Renderer.NEAR_PLANE, Renderer.FAR_PLANE);
+		System.out.println(distance);
+	}
 
 	public float getPitch() {
 		return pitch;
+	}
+	
+	private Vector3f getFromCameraRay() {
+		float rx = (float)Math.sin((double)getYaw() * (double)(Math.PI / 180)) * -1 * (1-Math.abs((float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1));
+		float ry = (float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1;
+		float rz = (float)Math.cos((double)getYaw() * (double)(Math.PI / 180)) * -1 * (1- Math.abs((float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1));
+		return new Vector3f(rx, ry, rz);
+	}
+	
+	
+	private float getRealDepthFromSample(float sample, float NEAR_PLANE, float FAR_PLANE) {
+		return (float)(2.0f * NEAR_PLANE * FAR_PLANE / (FAR_PLANE + NEAR_PLANE - (2.0f * sample - 1.0f) * (FAR_PLANE - NEAR_PLANE)));
 	}
 
 	public float getYaw() {

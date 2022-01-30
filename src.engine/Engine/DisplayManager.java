@@ -28,9 +28,11 @@ public class DisplayManager {
 			Display.create(new PixelFormat(), attribs);
 			Display.setTitle("Our First Display!");
 			Display.setResizable(true);
+			Display.setLocation(0, 0);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
+
 		
 		GL11.glViewport(0,0, WIDTH, HEIGHT);
 	}

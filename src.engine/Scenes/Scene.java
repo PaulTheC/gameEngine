@@ -17,7 +17,6 @@ public abstract class Scene{
 	}
 	
 	public void onUpdate() {
-		System.out.println(entitys);
 		for(Entity e: entitys) 
 			e.onUpdate();
 	}

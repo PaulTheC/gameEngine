@@ -3,6 +3,8 @@ package Utilities;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 
+import Camera.MainCamera;
+
 public class MouseHandler {
 	
 	private static int lastXMovement = 0;
@@ -34,6 +36,9 @@ public class MouseHandler {
 		lastXMovement = Mouse.getX()-500;
 		lastYMovement = Mouse.getY()-500;
 		Mouse.setCursorPosition(500, 500);
+		
+		if(Mouse.isButtonDown(0))
+			MainCamera.getCamera().leftMouseDown();
 	}
 	
 	public static void onDestory() {

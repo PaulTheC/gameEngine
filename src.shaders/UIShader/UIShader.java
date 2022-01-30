@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import Camera.Camera;
+import Camera.MainCamera;
 import Engine.Main;
 import Entiys.Entity;
 import Lights.Light;
@@ -92,7 +93,7 @@ public class UIShader extends StaticShader{
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), Main.camera, true);
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), MainCamera.getCamera(), true);
 		entity.getShader().loadTransformationMatrix(transformationMatrix);
 		if(model.getHasTexture()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);

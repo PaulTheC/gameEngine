@@ -29,8 +29,8 @@ import UIShader.UIShader;
 public class Renderer {
 	
 	private static final float FOV = 70;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 3000;
+	public static final float NEAR_PLANE = 0.1f;
+	public static final float FAR_PLANE = 3000;
 	private Camera camera;
 	
 	
