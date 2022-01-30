@@ -65,6 +65,8 @@ public class Main {
 		new TestScene();
 		
 		
+		UIElement crosshair = new UIElement("crosshair", uiShader);
+		
 		
 		SceneManager.getActiveScene().onStart();
 		
@@ -72,8 +74,8 @@ public class Main {
 			
 			SceneManager.getActiveScene().onUpdate();
 			
-			MouseHandler.mouseUpdate();
 			MainCamera.onUpdate();
+			MouseHandler.mouseUpdate();
 			
 			
 			

@@ -9,8 +9,8 @@ import Models.TexturedModel;
 
 public class UIElement extends Entity{
 
-	public UIElement(String fileName, Loader loader, StaticShader programm) {
-		super(loader.loadUIElement(fileName, 1,1,1), programm);
+	public UIElement(String fileName, StaticShader programm) {
+		super(Loader.loadUIElement(fileName, 1,1,1), programm);
 		// TODO Auto-generated constructor stub
 	}
 

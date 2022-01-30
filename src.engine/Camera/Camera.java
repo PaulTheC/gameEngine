@@ -119,20 +119,43 @@ public class Camera {
 		return position;
 	}
 	
+
 	public void leftMouseDown() {
-		Vector3f ray = getFromCameraRay();
-		FloatBuffer depthBuffer = BufferUtils.createFloatBuffer(Display.getWidth() * Display.getHeight());
-		GL11.glReadBuffer(GL11.GL_DEPTH);
-		GL11.glReadPixels(0, 0, Display.getWidth(), Display.getHeight(), GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT,depthBuffer);
-		float distance = getRealDepthFromSample(depthBuffer.get(Display.getWidth() * Display.getHeight() / 2 + Display.getWidth() / 2), Renderer.NEAR_PLANE, Renderer.FAR_PLANE);
-		System.out.println(distance);
+
+		//casting a ray from the centre of the camera and calculating the intersection with the Terrain
+		Vector3f intersection = getTerrainIntersection(getFromCameraRay());
+		
+		if(intersection != null)
+			light.setPosition(intersection);
+
 	}
 
 	public float getPitch() {
 		return pitch;
 	}
 	
-	private Vector3f getFromCameraRay() {
+	
+	//performance intensive
+	public Vector3f getTerrainIntersection(Vector3f ray) {
+		float distance = getDistanceOfPoint((int)(Display.getHeight() / 2f), (int)(Display.getWidth() / 2f));
+		
+		Vector3f intersection = new Vector3f(ray.x * -distance, ray.y * distance, ray.z * distance);
+		Vector3f.add(intersection, getPosition(), intersection);
+		
+		return distance != 0 ? intersection : null;
+		
+	}
+	
+	//calculates the distance to a point using the depth texture
+	private float getDistanceOfPoint(int x, int y) {
+		FloatBuffer depthBuffer = BufferUtils.createFloatBuffer(Display.getWidth() * Display.getHeight());
+		GL11.glReadBuffer(GL11.GL_DEPTH);
+		GL11.glReadPixels(0, 0, Display.getWidth(), Display.getHeight(), GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT,depthBuffer);
+		float distance = getRealDepthFromSample(depthBuffer.get(Display.getWidth() * x + y -1), Renderer.NEAR_PLANE, Renderer.FAR_PLANE) ;
+		return depthBuffer.get(Display.getWidth() * x + y -1) != 1 ? distance : 0;
+	}
+	
+	public Vector3f getFromCameraRay() {
 		float rx = (float)Math.sin((double)getYaw() * (double)(Math.PI / 180)) * -1 * (1-Math.abs((float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1));
 		float ry = (float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1;
 		float rz = (float)Math.cos((double)getYaw() * (double)(Math.PI / 180)) * -1 * (1- Math.abs((float)Math.cos((double)getPitch() * (double)(Math.PI / 180) - 90 * (Math.PI / 180)) * -1));

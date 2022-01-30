@@ -61,7 +61,7 @@ public class Renderer {
 		
 		//rendering
 		EntityMaster.renderAllEntitys(SceneManager.getActiveScene());
-		
+		UIElementsMaster.renderAllUIElements();
 		
 		//cleaning up
 		
