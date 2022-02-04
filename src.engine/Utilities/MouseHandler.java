@@ -4,11 +4,15 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 
 import Camera.MainCamera;
+import Components.Event;
+import Engine.Player;
 
 public class MouseHandler {
 	
 	private static int lastXMovement = 0;
 	private static int lastYMovement = 0;
+	private static boolean lastLeftDown = false;
+	private static boolean lastRightDown = false;
 	
 	public static void initMouse() {
 		try {
@@ -37,8 +41,27 @@ public class MouseHandler {
 		lastYMovement = Mouse.getY()-500;
 		Mouse.setCursorPosition(500, 500);
 		
-		if(Mouse.isButtonDown(0))
-			MainCamera.getCamera().leftMouseDown();
+		if(Mouse.isButtonDown(0) && !lastLeftDown) {
+//			Player.getCamera().leftMouseDown();		
+			Event.callEvent("leftMouseButtonDown");
+			lastLeftDown = true;
+		}
+		if(!Mouse.isButtonDown(0) && lastLeftDown) {
+			Event.callEvent("leftMouseButtonClicked");
+			lastLeftDown = false;
+		}
+		if(Mouse.isButtonDown(1) && !lastRightDown) {
+//			Player.getCamera().rightMouseDown();
+			Event.callEvent("rightMouseButtonDown");
+			lastRightDown = true;
+		}
+		if(!Mouse.isButtonDown(1) && lastRightDown) {
+			Event.callEvent("rightMouseButtonClicked");
+			lastRightDown = false;
+		}
+	
+
+		
 	}
 	
 	public static void onDestory() {

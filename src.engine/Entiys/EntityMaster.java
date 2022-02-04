@@ -15,6 +15,7 @@ public class EntityMaster {
 	public static void renderAllEntitys(Scene scene) {
 
 		for(Entity e : scene.getEntitys()) {
+			if(!e.hasMesh()) continue;
 			e.getShader().prepare(e);
 			e.getShader().render(e);
 			e.getShader().cleanUp(e);

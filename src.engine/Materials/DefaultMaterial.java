@@ -15,7 +15,7 @@ public class DefaultMaterial extends StaticMaterial{
 	
 	@Override
 	public final float diffuse() {
-		return 0.3f;
+		return 2f;
 	}
 	
 }

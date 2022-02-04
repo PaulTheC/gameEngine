@@ -3,20 +3,30 @@
 in vec3 position;
 in vec2 textureCoordinates;
 in vec3 normals;
+in vec3 colors;
 
-out vec2 pass_textureCoordinates;
-out vec3 pass_surfaceNormal;
-out vec3 pass_toLightVector[5];
+out vec4 geo_lightColor;
+out vec3 geo_colors;
+out vec4 geo_positions;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[5];
 uniform vec3 offset;
+uniform sampler2D modelTexture;
+uniform float diffuse;
+uniform vec3 diffuseColor;
+uniform float strength[5];
+uniform float hasTexture;
+uniform vec3 attenuation[5];
+uniform vec3 lightColor[5];
 
-void main(void){
-	
-	
+
+
+
+vec3 calcSpherePos()
+{
 	float pi = 3.1415926535897932384626433832795f;
 	float radius = 3000;
 	float posX = position.x - inverse(viewMatrix)[3].x + offset.x;
@@ -29,19 +39,65 @@ void main(void){
 	
 	float y = cos((sqrt((posX)*(posX) + (posZ)*(posZ)) / (2 * pi * ((radius + posY))-0.25)) * 2 * pi) * (radius + posY) - radius;
 	
+	return vec3(x + inverse(viewMatrix)[3].x - offset.x, y - offset.y, z + inverse(viewMatrix)[3].z - offset.z);
 
-	
-	
-	vec4 worldPosition = transformationMatrix * vec4(posX, posY, posZ ,1.0);
-	worldPosition = transformationMatrix * vec4(x + inverse(viewMatrix)[3].x - offset.x, y - offset.y, z + inverse(viewMatrix)[3].z - offset.z,1.0);
+}
 
-	gl_Position = projectionMatrix * viewMatrix * worldPosition;
-	pass_textureCoordinates = textureCoordinates * 40;
+
+void main(void){
+	vec3 vertexPos = position;
+
+	//Comment the line below for non-sherical view;
+	//vertexPos = calcSpherePos();
 	
-	pass_surfaceNormal = (transformationMatrix * vec4(normals, 0.0)).xyz;
+	vec4 worldPosition = transformationMatrix * vec4(vertexPos,1.0);
+
+
+	geo_positions = projectionMatrix * viewMatrix * worldPosition;
+	
+	
+	vec3 geo_toLightVector1 = lightPosition[0] - worldPosition.xyz;
+	vec3 geo_toLightVector2 = lightPosition[1] - worldPosition.xyz;
+	vec3 geo_toLightVector3 = lightPosition[2] - worldPosition.xyz;
+	vec3 geo_toLightVector4 = lightPosition[3] - worldPosition.xyz;
+	vec3 geo_toLightVector5 = lightPosition[4] - worldPosition.xyz;
+	
+	
+	
+	
+	
+	
+	
+	
+	vec3 toLightVector[5] = vec3[](geo_toLightVector1, geo_toLightVector2, geo_toLightVector3, geo_toLightVector4, geo_toLightVector5);
+	
+	vec4 lightTotal = vec4(0, 0, 0,1);
 	
 	for(int i = 0; i < 5; i++){
-		pass_toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+		// Check if Light exists
+		if(strength[i] == 0)
+		{
+			lightTotal = lightTotal + vec4(diffuse / 5, diffuse / 5, diffuse / 5,1);
+			continue;
+		}
+	
+		//Light Attenuation Calculations
+		float distance = length(toLightVector[i]) / strength[i];
+		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
+		
+		//Face Brightness Calculations
+		float brightness = dot(normalize(normals), normalize(toLightVector[i])) + 1;
+
+		//Summing up all Light Calculations
+		lightTotal = lightTotal + (brightness / attFactor) * vec4(lightColor[i],1);
 	}
 	
+	geo_lightColor = lightTotal;
+	
+	geo_colors =  colors;
+	
+	
 }
+
+
+

@@ -31,6 +31,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import Engine.DisplayManager;
 import Models.RawModel;
 import Models.TexturedModel;
+import Textures.ModelTexture;
 
 public class Loader {
 	
@@ -50,8 +51,35 @@ public class Loader {
 		return vaoID;
 	}
 	
+	public static int loadToVAO(float[] positions,float[] textureCoords ,int[] indices, float[] normals, float[] colors){
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0,3,positions);
+		storeDataInAttributeList(1,2,textureCoords);
+		storeDataInAttributeList(2,3,normals);
+		storeDataInAttributeList(3,3,colors);
+		
+		unbindVAO();
+		return vaoID;
+	}
 	
-	public static int loadTexture(String fileName) {
+	public static void updateVertexPositions(float[] positions, int voaID) {
+		
+		bindVAO(voaID);
+		storeDataInAttributeList(0, 3, positions);
+		unbindVAO();
+		
+	}
+	
+	public static void updateVertexNormals(float[] normals, int voaID) {
+		
+		bindVAO(voaID);
+		storeDataInAttributeList(2, 3, normals);
+		unbindVAO();
+		
+	}
+	
+	public static ModelTexture loadTexture(String fileName) {
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
@@ -64,12 +92,15 @@ public class Loader {
 			System.exit(-1);
 		}
 		textures.add(texture.getTextureID());
+		
+		
 		int n = texture.getImageHeight();
+		
 		
 		//checking if n is a power of 2 
 		if((int)(Math.ceil((Math.log(n) / Math.log(2)))) != (int)(Math.floor(((Math.log(n) / Math.log(2))))))
-			System.out.println("The size of the image "+ fileName+" is not a power of 2. Black line might occur!");
-		return texture.getTextureID();
+			System.out.println("The size of the image "+ fileName+" is not a power of 2. Black lines might occur!");
+		return new ModelTexture(texture.getTextureID(), texture.getImageHeight(), texture.getImageWidth(), fileName);
 	}
 	
 	public static void cleanUp(){
@@ -103,6 +134,10 @@ public class Loader {
 	
 	private static void unbindVAO(){
 		GL30.glBindVertexArray(0);
+	}
+	
+	private static void bindVAO(int vaoID){
+		GL30.glBindVertexArray(vaoID);
 	}
 	
 	private static void bindIndicesBuffer(int[] indices){

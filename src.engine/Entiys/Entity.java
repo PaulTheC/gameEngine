@@ -23,6 +23,7 @@ public class Entity {
 	private Vector3f position = new Vector3f(0,0,0);
 	private float rotX = 0, rotY = 0, rotZ = 0;
 	private float scale = 1;
+	private boolean hasMesh = true;
 	private StaticShader programm;
 	private StaticMaterial material;
 	private ArrayList<Component> components = new ArrayList<>();
@@ -107,6 +108,8 @@ public class Entity {
 	
 	
 	public Entity(){
+		hasMesh = false;
+		EntityMaster.addEntity(this);
 	}
 
 	public void increasePosition(float dx, float dy, float dz) {
@@ -134,7 +137,7 @@ public class Entity {
 	}
 
 	public void setPosition(Vector3f position) {
-		this.position = position;
+		this.position = new Vector3f(position.x, position.y, position.z);
 	}
 
 	public float getRotX() {
@@ -188,7 +191,7 @@ public class Entity {
 	
 	public void onUpdate () {
 		for(Component c: components) {
-			if(true)
+			if(c.isAvcive())
 				c.onUpdate(this);
 		}
 	}
@@ -202,6 +205,11 @@ public class Entity {
 	
 	public void addComponent(Component com) {
 		components.add(com);
+		com.initialise();
+	}
+	
+	public boolean hasMesh() {
+		return hasMesh;
 	}
 
 }

@@ -1,0 +1,78 @@
+#version 150
+
+in vec3 position;
+in vec2 textureCoordinates;
+in vec3 normals;
+in vec3 colors;
+
+out vec2 geo_textureCoordinates;
+out vec3 geo_surfaceNormal;
+out vec3 geo_toLightVector1;
+out vec3 geo_toLightVector2;
+out vec3 geo_toLightVector3;
+out vec3 geo_toLightVector4;
+out vec3 geo_toLightVector5;
+out vec3 geo_colors;
+out vec4 geo_positions;
+
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform vec3 lightPosition[5];
+uniform vec3 offset;
+uniform sampler2D modelTexture;
+uniform float diffuse;
+uniform vec3 diffuseColor;
+uniform float strength[5];
+uniform float hasTexture;
+uniform vec3 attenuation[5];
+uniform vec3 lightColor[5];
+
+
+
+
+vec3 calcSpherePos()
+{
+	float pi = 3.1415926535897932384626433832795f;
+	float radius = 3000;
+	float posX = position.x - inverse(viewMatrix)[3].x + offset.x;
+	float posY = position.y + offset.y;
+	float posZ = position.z - inverse(viewMatrix)[3].z + offset.z;
+	
+	//vec3 world = vec3(  sin(((position.x) / (2 * 3.1415926535897932384626433832795f * (radius + position.y))-0.25)) * 2 * 3.1415926535897932384626433832795) * (radius + position.y), 1f, sin(((position.z) / (2 * 3.1415926535897932384626433832795f * (radius + position.y))-0.25)) * 2 * 3.1415926535897932384626433832795) * (radius + position.y)
+	float x = sin(((posX) / ((2 * pi * (radius + posY))-0.25)) * 2 * pi) * (radius + posY);
+	float z = sin(((posZ) / ((2 * pi * (radius + posY))-0.25)) * 2 * pi) * (radius + posY);
+	
+	float y = cos((sqrt((posX)*(posX) + (posZ)*(posZ)) / (2 * pi * ((radius + posY))-0.25)) * 2 * pi) * (radius + posY) - radius;
+	
+	return vec3(x + inverse(viewMatrix)[3].x - offset.x, y - offset.y, z + inverse(viewMatrix)[3].z - offset.z);
+
+}
+
+
+void main(void){
+	vec3 vertexPos = position;
+
+	//Comment the line below for non-sherical view;
+	//vertexPos = calcSpherePos();
+	
+	vec4 worldPosition = transformationMatrix * vec4(vertexPos,1.0);
+
+
+	geo_positions = projectionMatrix * viewMatrix * worldPosition;
+	geo_textureCoordinates = textureCoordinates * 40;
+	geo_colors = colors;
+	
+	geo_surfaceNormal = (transformationMatrix * vec4(normals, 0.0)).xyz;
+	
+	
+	geo_toLightVector1 = lightPosition[0] - worldPosition.xyz;
+	geo_toLightVector2 = lightPosition[1] - worldPosition.xyz;
+	geo_toLightVector3 = lightPosition[2] - worldPosition.xyz;
+	geo_toLightVector4 = lightPosition[3] - worldPosition.xyz;
+	geo_toLightVector5 = lightPosition[4] - worldPosition.xyz;
+	
+}
+
+
+

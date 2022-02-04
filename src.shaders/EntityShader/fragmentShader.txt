@@ -26,7 +26,7 @@ void main(void){
 	}
 
 	
-	vec4 lightTotal = vec4(diffuse, diffuse, diffuse,1);
+	vec4 lightTotal = vec4(0, 0, 0,1);
 	
 	for(int i = 0; i < 5; i++){
 		//Light Attenuation Calculations
@@ -34,10 +34,10 @@ void main(void){
 		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
 		
 		//Face Brightness Calculations
-		float brightness = max(dot(normalize(surfaceNormal), normalize(toLightVector[i])),0.1);
+		float brightness = max(dot(normalize(surfaceNormal), normalize(toLightVector[i])), diffuse / 5);
 
 		//Summing up all Light Calculations
-		lightTotal = lightTotal + ((brightness))  * vec4(lightColor[i],1);
+		lightTotal = lightTotal + ((brightness) / attFactor)  * vec4(lightColor[i],1);
 	}
 	
 	vec4 finalColor = lightTotal * textureColor;

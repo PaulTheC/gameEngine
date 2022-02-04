@@ -9,11 +9,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import Camera.Camera;
 import Engine.Main;
+import Engine.Player;
 import Entiys.Entity;
 import Lights.Light;
 import MainShader.StaticShader;
@@ -97,8 +99,8 @@ public class LowPolyTerrainShader extends StaticShader{
 	@Override
 	public void loadArguments(Entity entity) {
 		super.loadBoolean(location_hasTexture, entity.getModel().getHasTexture());
-		loadViewMatrix(Main.getCamera());
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), Main.getCamera(), false);
+		loadViewMatrix(Player.getCamera());
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), Player.getCamera(), false);
 		loadTransformationMatrix(transformationMatrix);
 		loadMaterial(entity);
 		super.loadVector(location_offset, entity.getPosition());
@@ -122,7 +124,7 @@ public class LowPolyTerrainShader extends StaticShader{
 
 	@Override
 	protected String[] getAttributes() {
-		String[] strings = {"position", "textureCoordinates", "normals"};
+		String[] strings = {"position", "textureCoordinates", "normals", "colors"};
 		return strings;
 	}
 
@@ -130,19 +132,23 @@ public class LowPolyTerrainShader extends StaticShader{
 	public void prepare(Entity entity) {
 		start();
 	
-		
+		GL32.glProvokingVertex(GL32.GL_FIRST_VERTEX_CONVENTION);
 		GL30.glBindVertexArray(entity.getModel().getRawModel().getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
+		
+		int i = 0;
+		for(String attribute: getAttributes()) {
+			GL20.glEnableVertexAttribArray(i++);
+		}
 		
 	}
 	
 	
 	public void cleanUp(Entity entity) {
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
+		
+		int i = 0;
+		for(String attribute: getAttributes()) {
+			GL20.glDisableVertexAttribArray(i++);
+		}
 		GL30.glBindVertexArray(0);
 		
 		stop();
@@ -153,6 +159,7 @@ public class LowPolyTerrainShader extends StaticShader{
 	public void render(Entity entity) {
 		
 
+		//GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		
 		loadArguments(entity);
 		
@@ -162,6 +169,7 @@ public class LowPolyTerrainShader extends StaticShader{
 		}
 		GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
 
 	@Override

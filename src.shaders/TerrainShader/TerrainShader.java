@@ -16,6 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 import Camera.Camera;
 import Camera.MainCamera;
 import Engine.Main;
+import Engine.Player;
 import Entiys.Entity;
 import Lights.Light;
 import MainShader.StaticShader;
@@ -98,8 +99,8 @@ public class TerrainShader extends StaticShader{
 	@Override
 	public void loadArguments(Entity entity) {
 		super.loadBoolean(location_hasTexture, entity.getModel().getHasTexture());
-		loadViewMatrix(MainCamera.getCamera());
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), MainCamera.getCamera(), false);
+		loadViewMatrix(Player.getCamera());
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale(), Player.getCamera(), false);
 		loadTransformationMatrix(transformationMatrix);
 		loadMaterial(entity);
 		super.loadVector(location_offset, entity.getPosition());
@@ -123,7 +124,7 @@ public class TerrainShader extends StaticShader{
 
 	@Override
 	protected String[] getAttributes() {
-		String[] strings = {"position", "textureCoordinates", "normals"};
+		String[] strings = {"position", "textureCoordinates", "normals", "colors"};
 		return strings;
 	}
 
@@ -133,17 +134,21 @@ public class TerrainShader extends StaticShader{
 	
 		GL32.glProvokingVertex(GL32.GL_FIRST_VERTEX_CONVENTION);
 		GL30.glBindVertexArray(entity.getModel().getRawModel().getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
+		
+		int i = 0;
+		for(String attribute: getAttributes()) {
+			GL20.glEnableVertexAttribArray(i++);
+		}
 		
 	}
 	
 	
 	public void cleanUp(Entity entity) {
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
+		
+		int i = 0;
+		for(String attribute: getAttributes()) {
+			GL20.glDisableVertexAttribArray(i++);
+		}
 		GL30.glBindVertexArray(0);
 		
 		stop();

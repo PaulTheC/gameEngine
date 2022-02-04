@@ -30,6 +30,7 @@ public class DisplayManager {
 			Display.setResizable(true);
 			Display.setLocation(0, 0);
 			Display.setFullscreen(true);
+			Display.setVSyncEnabled(true);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}

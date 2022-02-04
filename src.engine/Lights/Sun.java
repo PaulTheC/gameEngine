@@ -10,12 +10,11 @@ public class Sun extends EnlightedEntity{
 
 	public Sun() {
 		super();
-		super.setPosition(new Vector3f(100, 0,1000));
+		super.setPosition(new Vector3f(0, 10000,10000));
 		super.setAttenuation(new Vector3f(1,0,0));
 		super.setBrightness(2);
 		super.setStrength(5);
 		
-		super.addComponent(new SunMovement());
 	}
 	
 }

@@ -30,7 +30,10 @@ public class Time {
 		secondsTimer += deltaTime;
 		FPSCount++;
 		if(secondsTimer > 1) {
-			System.out.println("FPS: "+FPSCount);
+			//System.out.println("FPS: "+FPSCount);
+			
+			if(FPSCount < 55) System.out.println("FPS warning: "+FPSCount);
+			
 			FPSCount = 0;
 			secondsTimer = 0;
 		}

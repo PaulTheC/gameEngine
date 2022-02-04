@@ -11,7 +11,7 @@ public class TexturedModel {
 	
 	public TexturedModel(RawModel model, String texureName){
 		this.rawModel = model;
-		this.texture = new ModelTexture(Loader.loadTexture(texureName));
+		this.texture = Loader.loadTexture(texureName);
 		hasTexture();
 	}
 	

@@ -52,20 +52,18 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		
 		DisplayManager.createDisplay();
-		MainCamera.init();
 		MouseHandler.initMouse();
 		Time.init();
 		
 		
 		shader = new EnitiyShader();
-		UIShader uiShader = new UIShader();
-		Renderer renderer = new Renderer(MainCamera.getCamera());
+		Renderer renderer = new Renderer(Player.getCamera());
 		material = new DefaultMaterial();
 
 	
 		new TestScene();
 		
-		UIElement crosshair = new UIElement("crosshair", uiShader);
+		Player.createPlayer();
 		
 		
 		SceneManager.getActiveScene().onStart();
@@ -74,7 +72,7 @@ public class Main {
 			
 			SceneManager.getActiveScene().onUpdate();
 			
-			MainCamera.onUpdate();
+
 			MouseHandler.mouseUpdate();
 			
 			
@@ -84,7 +82,7 @@ public class Main {
 			renderer.render();
 			
 			//update Display
-			DisplayManager.resizeDisplay(MainCamera.getCamera(), renderer, shader);
+			DisplayManager.resizeDisplay(Player.getCamera(), renderer, shader);
 			DisplayManager.updateDisplay();
 			
 			//analysing

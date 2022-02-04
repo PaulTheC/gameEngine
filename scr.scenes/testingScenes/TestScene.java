@@ -12,6 +12,8 @@ import Physics.Rigidbody;
 import Scenes.Scene;
 import Scenes.SceneManager;
 import Terrain.Map;
+import UIElements.UIElement;
+import UIShader.UIShader;
 import Utilities.Time;
 
 public class TestScene extends Scene{
@@ -19,30 +21,30 @@ public class TestScene extends Scene{
 	public static Map map;
 	public static Sun sun;
 	public static Lantern lantern;
-	public static Entity[] cube;
+	public static Entity cube;
 
 
 	public TestScene() {
 		super("testScene");
 
+		UIShader uiShader = new UIShader();
 		
 		map = new Map();
 		sun = new Sun();
-		cube = new Entity[100];
-		
-		for(int i = 0; i < cube.length; i++) {
-			cube[i] = new Entity("cube");
-		}
-		
+		cube = new Entity("cube");
+
 		lantern = new Lantern();
-		lantern.increasePosition(1000, map.getHeightOfTerrain(1000, 200)+1, 200);
+		lantern.increasePosition(1000, map.getHeightOfTerrain(300, 200)+1, 200);
 		
 		Lantern lantern2 = new Lantern();
 		lantern2.increasePosition(200, map.getHeightOfTerrain(200, 200)+1, 200);
 		
+		sun.addComponent(new SunMovement());
 		
-		lantern.addComponent(new Rigidbody());
-
+		
+		UIElement crosshair = new UIElement("circle", uiShader);
+		crosshair.setScale(3);
+		crosshair.increasePosition(-crosshair.getModel().getTexture().getWidth() / crosshair.getScale() / 2, -crosshair.getModel().getTexture().getHeight() /crosshair.getScale() /2, 0);
 		
 	}
 }

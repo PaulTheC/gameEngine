@@ -1,0 +1,70 @@
+#version 430
+
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 3) out;
+
+out vec2 pass_textureCoordinates;
+flat out vec3 surfaceNormal;
+out vec3 toLightVector1;
+out vec3 toLightVector2;
+out vec3 toLightVector3;
+out vec3 toLightVector4;
+out vec3 toLightVector5;
+flat out vec3 pass_colors;
+out vec4 finalColor;
+
+in vec2 geo_textureCoordinates[];
+in vec3 geo_surfaceNormal[];
+in vec3 geo_toLightVector1[];
+in vec3 geo_toLightVector2[];
+in vec3 geo_toLightVector3[];
+in vec3 geo_toLightVector4[];
+in vec3 geo_toLightVector5[];
+in vec3 geo_colors[];
+in vec4 geo_positions[];
+
+void main(void)
+{
+
+	vec3 averageColor = sqrt((geo_colors[0] * geo_colors[0] + geo_colors[1] * geo_colors[1] + geo_colors[2] * geo_colors[2]) / 3);
+	
+
+	pass_textureCoordinates = geo_textureCoordinates[0];
+	surfaceNormal = geo_surfaceNormal[0];
+	toLightVector1 = geo_toLightVector1[0];
+	toLightVector2 = geo_toLightVector2[0];
+	toLightVector3 = geo_toLightVector3[0];
+	toLightVector4 = geo_toLightVector4[0];
+	toLightVector5 = geo_toLightVector5[0];
+	pass_colors = averageColor;
+	gl_Position = geo_positions[0];
+	
+	EmitVertex();
+	
+	pass_textureCoordinates = geo_textureCoordinates[1];
+	surfaceNormal = geo_surfaceNormal[1];
+	toLightVector1 = geo_toLightVector1[1];
+	toLightVector2 = geo_toLightVector2[1];
+	toLightVector3 = geo_toLightVector3[1];
+	toLightVector4 = geo_toLightVector4[1];
+	toLightVector5 = geo_toLightVector5[1];
+	pass_colors = averageColor;
+	gl_Position = geo_positions[1];
+	
+	EmitVertex();
+	
+	pass_textureCoordinates = geo_textureCoordinates[2];
+	surfaceNormal = geo_surfaceNormal[2];
+	toLightVector1 = geo_toLightVector1[2];
+	toLightVector2 = geo_toLightVector2[2];
+	toLightVector3 = geo_toLightVector3[2];
+	toLightVector4 = geo_toLightVector4[2];
+	toLightVector5 = geo_toLightVector5[2];
+	pass_colors = averageColor;
+	gl_Position = geo_positions[2];
+		
+	EmitVertex();
+
+	EndPrimitive();
+
+}

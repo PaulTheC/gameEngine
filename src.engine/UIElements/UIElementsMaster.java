@@ -18,7 +18,7 @@ public class UIElementsMaster {
 	
 	public static void deleteUiElement(UIElement uielement) {
 		boolean success = allUiElements.remove(uielement);
-		if(!success)System.out.println("You tried to remove a not existing Light from the List");
+		if(!success)System.out.println("You tried to remove a not existing UI Element from the List");
 	}
 	
 	public static void renderAllUIElements() {

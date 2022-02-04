@@ -3,33 +3,33 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
-in vec2 pass_textureCoordinates[];
-in vec3 pass_surfaceNormal[];
-in vec3 pass_toLightVector[][5];
+flat out vec4 pass_colors;
 
-out vec2 textureCoordinates;
-out vec3 surfaceNormal;
-out vec3 toLightVector[5];
+in vec4 geo_lightColor[];
+in vec3 geo_colors[];
+in vec4 geo_positions[];
 
 void main(void)
 {
 
-	textureCoordinates = pass_textureCoordinates[0];
-	surfaceNormal = pass_surfaceNormal[0];
-	toLightVector = pass_toLightVector[0];
+	vec3 averageColor = sqrt((geo_colors[0] * geo_colors[0] + geo_colors[1] * geo_colors[1] + geo_colors[2] * geo_colors[2]) / 3)   / 8;
+	
+	vec4 finalColor = vec4(averageColor,1) * geo_lightColor[0];
+
+	pass_colors = finalColor;
+	gl_Position = geo_positions[0];
 	
 	EmitVertex();
 	
-	textureCoordinates = pass_textureCoordinates[1];
-	surfaceNormal = pass_surfaceNormal[1];
-	toLightVector = pass_toLightVector[1];
+	pass_colors = finalColor;
+	gl_Position = geo_positions[1];
 	
 	EmitVertex();
 	
-	textureCoordinates = pass_textureCoordinates[2];
-	surfaceNormal = pass_surfaceNormal[2];
-	toLightVector = pass_toLightVector[2];
-	
+
+	pass_colors = finalColor;
+	gl_Position = geo_positions[2];
+		
 	EmitVertex();
 
 	EndPrimitive();

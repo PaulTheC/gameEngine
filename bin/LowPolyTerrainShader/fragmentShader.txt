@@ -1,48 +1,13 @@
 #version 400
 
-in vec2 textureCoordinates;
-in vec3 surfaceNormal;
-in vec3 toLightVector[5];
+flat in vec4 pass_colors;
 
 out vec4 out_Color;
-
-uniform sampler2D modelTexture;
-uniform float diffuse;
-uniform vec3 diffuseColor;
-uniform float strength[5];
-uniform float hasTexture;
-uniform vec3 attenuation[5];
-uniform vec3 lightColor[5];
 
 void main(void){
 	
 	
-	vec4 textureColor ;
-	
-	if(hasTexture > 0.5) {
-		textureColor = texture(modelTexture, textureCoordinates);
-	}else{
-		textureColor = vec4(diffuseColor,1);
-	}
-
-	
-	vec4 lightTotal = vec4(diffuse, diffuse, diffuse,1);
-	
-	for(int i = 0; i < 5; i++){
-		//Light Attenuation Calculations
-		float distance = length(toLightVector[i]);
-		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
-		
-		//Face Brightness Calculations
-		float brightness = max(dot(normalize(surfaceNormal), normalize(toLightVector[i])),0.15);
-
-		//Summing up all Light Calculations
-		lightTotal = lightTotal + brightness * strength[i] * vec4(lightColor[i],1);
-	}
-	
-	vec4 finalColor = lightTotal * textureColor;
-	
-	out_Color =  finalColor;
+	out_Color =  pass_colors;
 	
 	
 }
