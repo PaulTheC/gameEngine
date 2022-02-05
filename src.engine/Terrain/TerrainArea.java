@@ -214,7 +214,7 @@ public class TerrainArea extends Entity{
 		}
 		
 		float[] newColors = new float[colors.length];
-		
+		Random r = new Random();
 		int pointer = 0;
 		int lenght = (int)Math.floor(Math.sqrt(colors.length / 6)) * 2;
 		for(int i=0;i<colors.length;i+=3){
@@ -225,44 +225,210 @@ public class TerrainArea extends Entity{
 			int up = change + lenght;
 			int down = change - lenght;
 			
-			float floatChange = colors[change * 3];
-			float floatRight, floatLeft, floatUp, floatDown;
 			
-			try {
-				floatRight = colors[right * 3];
-			}catch(IndexOutOfBoundsException e) {
-				floatRight = 1;
+			int radius = 3;
+			float finalColor = 0;
+			for(int x = -radius; x < radius; x++) {
+				for(int z = -radius; z < radius; z++) {
+					float color;
+					try {
+						if(finalColor != 1)
+							finalColor = colors[(i / 3 + (x -2 )* lenght + z -2) * 3];
+					}catch(IndexOutOfBoundsException e) {
+						finalColor = 1;
+					}
+					System.out.println(finalColor + "    "+ (i / 3 + x * lenght + z - 2) * 3 + "    "+ x + "    "+ z);
+				}
 			}
-			try {
-				floatLeft = colors[left * 3];
-			}catch(IndexOutOfBoundsException e) {
-				floatLeft = 1;
-			}
-			try {
-				floatUp = colors[up * 3];
-			}catch(IndexOutOfBoundsException e) {
-				floatUp = 1;
-			}
-			try {
-				floatDown = colors[down * 3];
-			}catch(IndexOutOfBoundsException e) {
-				floatDown = 1;
-			}
+			newColors[pointer] = finalColor;
+			newColors[pointer+1] = finalColor;
+			newColors[pointer+2] = finalColor;
 			
-			if(floatRight == 1 || floatLeft == 1 || floatUp == 1 || floatDown == 1) {
-				newColors[pointer] = 0;
-				newColors[pointer+1] = 1;
-				newColors[pointer+2] =0;
-				
-			}else if(floatRight != 0 || floatLeft != 0 || floatUp != 0 || floatDown != 0) {
-				newColors[pointer] = 0.6f;
-				newColors[pointer+1] = 0.6f;
-				newColors[pointer+2] = 0.6f;
-			}else {
-				newColors[pointer] = 0;
-				newColors[pointer+1] = 1;
-				newColors[pointer+2] =0;
-			}
+			
+//			float floatChange = colors[change * 3];
+//			float floatRight, floatLeft, floatUp, floatDown, floatRD, floatRU, floatLD, floatLU;
+//			float floatRR, floatLL, floatUU, floatDD;
+//			float floatRRU, floatLLU, floatUUL, floatDDL, floatRRD, floatLLD, floatUUR, floatDDR;
+//			float floatRRR, floatLLL, floatUUU, floatDDD, floatRRRR, floatLLLL, floatUUUU, floatDDDD;
+//			
+//			
+//			try {
+//				floatRRRR = colors[right * 3 + 12];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRRRR = 1;
+//			}
+//			try {
+//				floatLLLL = colors[left * 3 + 12];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLLLL = 1;
+//			}
+//			try {
+//				floatUUUU = colors[(up + 3 * lenght) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatUUUU = 1;
+//			}
+//			try {
+//				floatDDDD = colors[(down - 3 * lenght) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatDDDD = 1;
+//			}
+//			try {
+//				floatRRR = colors[right * 3 + 9];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRRR = 1;
+//			}
+//			try {
+//				floatLLL = colors[left * 3 + 9];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLLL = 1;
+//			}
+//			try {
+//				floatUUU = colors[(up + 2 * lenght) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatUUU = 1;
+//			}
+//			try {
+//				floatDDD = colors[(down - 2 * lenght) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatDDD = 1;
+//			}
+//			try {
+//				floatRRD = colors[down * 3 - 6];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRRD = 1;
+//			}
+//			try {
+//				floatLLD = colors[down * 3 + 6];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLLD = 1;
+//			}
+//			try {
+//				floatUUR = colors[(up + 1 * lenght -1) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatUUR = 1;
+//			}
+//			try {
+//				floatDDR = colors[(down - 1 * lenght -1) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatDDR = 1;
+//			}
+//			try {
+//				floatRRU = colors[up * 3 - 6];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRRU = 1;
+//			}
+//			try {
+//				floatLLU = colors[up * 3 + 6];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLLU = 1;
+//			}
+//			try {
+//				floatUUL = colors[(up + 1 * lenght +1) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatUUL = 1;
+//			}
+//			try {
+//				floatDDL = colors[(down - 1 * lenght +1) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatDDL = 1;
+//			}
+//			try {
+//				floatRR = colors[right * 3 + 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRR = 1;
+//			}
+//			try {
+//				floatLL = colors[left * 3 + 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLL = 1;
+//			}
+//			try {
+//				floatUU = colors[(up + 1 * lenght) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatUU = 1;
+//			}
+//			try {
+//				floatDD = colors[(down - 1 * lenght) * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatDD = 1;
+//			}
+//			try {
+//				floatRight = colors[right * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRight = 1;
+//			}
+//			try {
+//				floatLeft = colors[left * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLeft = 1;
+//			}
+//			try {
+//				floatUp = colors[up * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatUp = 1;
+//			}
+//			try {
+//				floatDown = colors[down * 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatDown = 1;
+//			}
+//			try {
+//				floatLD = colors[down * 3 + 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLD = 1;
+//			}
+//			try {
+//				floatLU = colors[up * 3 + 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatLU = 1;
+//			}
+//			try {
+//				floatRD = colors[down * 3 - 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRD = 1;
+//			}
+//			try {
+//				floatRU = colors[up * 3 - 3];
+//			}catch(IndexOutOfBoundsException e) {
+//				floatRU = 1;
+//			}
+//			
+//			if(floatRight == 1 || floatLeft == 1 || floatUp == 1 || floatDown == 1 || floatLD == 1|| floatLU == 1 || floatRD == 1 || floatRU == 1 || floatLL == 1 || floatRR == 1 || floatDD == 1 || floatUU == 1 || floatDDL == 1 || floatDDR == 1 || floatLLD == 1 || floatLLU == 1 || floatRRD == 1 || floatRRU == 1 || floatUUL == 1 || floatUUR == 1 || floatDDD == 1 || floatRRR == 1 || floatLLL == 1 || floatUUU == 1 || floatDDDD == 1 || floatRRRR == 1 || floatLLLL == 1 || floatUUUU == 1) {
+//				newColors[pointer] = 0;
+//				newColors[pointer+1] = 1;
+//				newColors[pointer+2] =0;
+//				
+//			}else if(floatRight != 0 || floatLeft != 0 || floatUp != 0 || floatDown != 0) {
+//				float rand = r.nextFloat(0.5f, 0.7f);
+//				newColors[pointer] = rand;
+//				newColors[pointer+1] =rand;
+//				newColors[pointer+2] = rand;
+//			}else if(floatLD != 0 || floatLU != 0 || floatRD != 0 || floatRU != 0 || floatLL != 0 || floatRR != 0 || floatDD != 0 || floatUU != 0) {
+//				float rand = r.nextFloat(0.4f, 0.6f);
+//				newColors[pointer] = rand;
+//				newColors[pointer+1] = r.nextFloat(0.6f, 0.8f);
+//				newColors[pointer+2] = rand;
+//			}else if(floatDDL != 0 || floatDDR != 0 || floatLLD != 0 || floatLLU != 0 || floatRRD != 0 || floatRRU != 0 || floatUUL != 0 || floatUUR != 0) {
+//				float rand = r.nextFloat(0.3f, 0.5f);		
+//				newColors[pointer] = rand;
+//				newColors[pointer+1] = r.nextFloat(0.65f, 0.9f);
+//				newColors[pointer+2] = rand;
+//			}else if(floatDDD != 0 || floatRRR != 0 || floatLLL != 0 || floatUUU != 0) {
+//				float rand = r.nextFloat(0.1f, 0.4f);	
+//				newColors[pointer] = rand;
+//				newColors[pointer+1] = r.nextFloat(0.7f, 0.95f);
+//				newColors[pointer+2] = rand;
+//			}
+//			else if(floatDDDD != 0 || floatRRRR != 0 || floatLLLL != 0 || floatUUUU != 0) {
+//				float rand = r.nextFloat(0.0f, 0.3f);	
+//				newColors[pointer] = rand;
+//				newColors[pointer+1] = r.nextFloat(0.8f, 1f);
+//				newColors[pointer+2] = rand;
+//			}else {
+//				newColors[pointer] = 0;
+//				newColors[pointer+1] = 1;
+//				newColors[pointer+2] =0;
+//			}
 
 //			
 //			System.out.println(pointer+ "    "+ floatChange + "    "+ floatDown + "     "+ floatUp + "     " + floatLeft + "     "+ floatRight);
