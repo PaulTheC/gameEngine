@@ -3,6 +3,7 @@ package Terrain;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import LowPolyTerrainShader.LowPolyTerrainShader;
 import TerrainShader.TerrainShader;
@@ -92,7 +93,7 @@ public class Map {
 	}
 	
 	
-	public void setHeight(int x, int y, float value, boolean inverted) {
+	public void setHeight(float x, float y, float value, boolean inverted) {
 		Vector2f grid = getTerrainTileInGrid(x, y);
 		
 		map[(int) grid.x][(int) grid.y].setHeight(x, y, value, inverted);
@@ -105,6 +106,12 @@ public class Map {
 		
 		return getTerrainInGrid(worldX, worldZ).getArrayHeight((int)(gridX % AREA_SIZE), (int)(gridZ % AREA_SIZE));
 		
+	}
+	
+	public void setColor(int x, int y, Vector3f value) {
+		Vector2f grid = getTerrainTileInGrid(x, y);
+		
+		map[(int) grid.x][(int) grid.y].setColor(x, y, value);
 	}
 
 }

@@ -15,9 +15,14 @@ import Terrain.Terraformer;
 import Terrain.TerrainArea;
 import testingScenes.TestScene;
 
+enum PlayerState{
+	terraforming, 
+	fighting
+}
+
 public class PlayerActionHandler extends Component{
 	
-	private String mode = "terraforming";
+	private PlayerState state = PlayerState.terraforming;
 	private boolean inverted = false;
 
 	@Override
@@ -34,11 +39,18 @@ public class PlayerActionHandler extends Component{
 	@Override
 	public void leftMouseButtonClicked() {
 		
-		switch (mode) {
+		switch (state) {
 		
-		case "terraforming":
+		case terraforming:
 			inverted = false;
 			Terraformer.terraform(inverted);
+			break;
+			
+		case fighting:
+			break;
+			
+		default:
+			break;
 		
 		}
 		
@@ -50,11 +62,18 @@ public class PlayerActionHandler extends Component{
 	
 
 		
-		switch (mode) {
+		switch (state) {
 		
-		case "terraforming":
+		case terraforming:
 			inverted = true;
 			Terraformer.terraform(inverted);
+			break;
+			
+		case fighting:
+			break;
+			
+		default:
+			break;
 		
 		}
 		

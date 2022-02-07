@@ -26,11 +26,13 @@ import Tools.Maths;
 
 public class TerrainArea extends Entity{
 	
-	private final int SIZE = 800;
-	public final int MAX_HEIGHT = 100;
+	private final int SIZE = 64;
+	public final int MAX_HEIGHT = 20;
 	private final int MAX_PIXEL_COLOUR = 256 * 256 * 256;
 	private BufferedImage heightMap;
 	private float[][] heights; 
+	private float[] colors;
+	private final float downhillTreshhold = 0.7f;
 	private float x = 0;
 	private float z = 0;
 	public float gridSquareSize;
@@ -61,7 +63,7 @@ public class TerrainArea extends Entity{
 		float[] vertices = calculateVertices();
 		float[] normals = calculateNormals(vertices);
 		int[] indices = calculateIndices();
-		float[] colors = calculateColors(normals);
+		colors = calculateColors(normals);
 
 		return new RawModel(Loader.loadToVAO(vertices, new float[] {}, indices, normals, colors), indices.length);
 	}
@@ -74,15 +76,15 @@ public class TerrainArea extends Entity{
 		
 		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 		
-		gridSquareSize = SIZE / ((float)heights.length - 1);
+		gridSquareSize = SIZE / ((float)heights.length);
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		int vertexPointer = 0;
 		for(int z=0;z<VERTEX_COUNT;z++){
 			for(int x=0;x<VERTEX_COUNT;x++){
 				vertices[vertexPointer*3] = ((float)x/((float)VERTEX_COUNT - 1) * SIZE);
-				heights[x][z] = getHeight(x, z);
-				vertices[vertexPointer*3+1] = getHeight(x, z);
+				heights[x][z] = calculateHeight(x, z);
+				vertices[vertexPointer*3+1] = calculateHeight(x, z);
 				vertices[vertexPointer*3+2] = ((float)z/((float)VERTEX_COUNT - 1) * SIZE);
 				vertexPointer++;
 			}
@@ -195,56 +197,139 @@ public class TerrainArea extends Entity{
 	}
 	
 	public float[] calculateColors(float[] normals) {
+		
+		Vector3f grey = new Vector3f(0.6f, 0.6f, 0.6f);
+		Vector3f green = new Vector3f(0,1,0);
+		
+		
+		int lenght = (int)Math.floor(Math.sqrt(normals.length / 6)) * 2;
 		float[] colors = new float[normals.length];
 		for(int i = 0; i < normals.length;) {
-			colors[i] = 0;
-			colors[i+1] = 1f;
-			colors[i+2] = 0;
+			colors[i] = green.x;
+			colors[i+1] = green.y;
+			colors[i+2] = green.z;
 			
-			Vector3f normal = new Vector3f(normals[i], normals[i+1], normals[i+2]);
+			Vector3f normal;
+			try {
+				normal = new Vector3f(normals[i], normals[i+1], normals[i+2]);
+			}catch(IndexOutOfBoundsException e) {
+				normal = new Vector3f(0,1,0);
+			}
 			float dot = Vector3f.dot(normal,(Vector3f) new Vector3f(0,1,0).normalise());
 			
-			if(dot < 0.7f) {
-				colors[i] = 0.6f;
-				colors[i+1] = 0.6f;
-				colors[i+2] = 0.6f;
+			if(dot < downhillTreshhold) {
+				colors[i] = grey.x;
+				colors[i+1] = grey.y;
+				colors[i+2] = grey.z;
+			}
+			
+			
+			//checking if the other triangle side is downhill
+			try {
+				normal = new Vector3f(normals[i - lenght * 3], normals[i+1 - lenght * 3], normals[i+2- lenght * 3]);
+			}catch(IndexOutOfBoundsException e) {
+				normal = new Vector3f(0,1,0);
+			}
+			dot = Vector3f.dot(normal,(Vector3f) new Vector3f(0,1,0).normalise());
+			
+			if(dot < downhillTreshhold) {
+				colors[i] = grey.x;
+				colors[i+1] = grey.y;
+				colors[i+2] = grey.z;
+			}
+			
+			//checking if the other triangle side is downhill
+			try {
+				normal = new Vector3f(normals[i - 3], normals[i-2], normals[i-1]);
+			}catch(IndexOutOfBoundsException e) {
+				normal = new Vector3f(0,1,0);
+			}
+			dot = Vector3f.dot(normal,(Vector3f) new Vector3f(0,1,0).normalise());
+			
+			if(dot < downhillTreshhold) {
+				colors[i] = grey.x;
+				colors[i+1] = grey.y;
+				colors[i+2] = grey.z;
+			}
+			
+			//checking if the other triangle side is downhill
+			try {
+				normal = new Vector3f(normals[i - lenght * 3 - 3], normals[i-2 - lenght * 3], normals[i-1- lenght * 3]);
+			}catch(IndexOutOfBoundsException e) {
+				normal = new Vector3f(0,1,0);
+			}
+			dot = Vector3f.dot(normal,(Vector3f) new Vector3f(0,1,0).normalise());
+			
+			if(dot < downhillTreshhold) {
+				colors[i] = grey.x;
+				colors[i+1] = grey.y;
+				colors[i+2] = grey.z;
 			}
 			
 			i+=3;
 		}
 		
-		float[] newColors = new float[colors.length];
-		Random r = new Random();
-		int pointer = 0;
-		int lenght = (int)Math.floor(Math.sqrt(colors.length / 6)) * 2;
-		for(int i=0;i<colors.length;i+=3){
+//		float[] newColors = new float[colors.length];
+//		Random r = new Random();
+//		int pointer = 0;
+//		for(int i=0;i<colors.length;i+=3){
+//			
+//			int change = i / 3;
+//			int right = change + 1;
+//			int left = change - 1;
+//			int up = change + lenght;
+//			int down = change - lenght;
+//			
+//			
+//			int radius = 10;
+//			float maxDistance = (float) Math.sqrt(radius*radius*2);
+//			float distance = maxDistance;
+//			Vector3f color = new Vector3f(0,1,0);
+//			for(int x = -radius; x < radius; x++) {
+//				for(int z = -radius; z < radius; z++) {
+//					try {
+//						int index = (i / 3 + (x) * lenght + z) * 3;
+//						color = new Vector3f(colors[index], colors[index+1], colors[index+2]);
+//						if(color.x == grey.x && color.y == grey.y && color.z == grey.z      &&     distance > (float) Math.sqrt(x * x + z * z)) {
+//							distance = (float) Math.sqrt(x * x + z * z);
+//						}
+//					}catch(IndexOutOfBoundsException e) {
+//						color = new Vector3f(0,0,0);
+//						break;
+//					}
+////					if(i < 2000)
+////						System.out.println(finalColor + "    "+ i/3/lenght + "     " + (i/3 - Math.floor(i/3/lenght) * lenght - z)+ "    " + (i / 3 + x * lenght + z - 2) * 3 + "    "+ x + "    "+ z);
+////					if(i/3 - Math.floor(i/3/lenght) * lenght - z  - radius - 1< 0) {
+////						color = new Vector3f(0,0,0);
+////						break;
+////					}
+////					if(i/3 - Math.floor(i/3/lenght) * lenght - z  + radius + 2> lenght) {
+////						color = new Vector3f(0,0,0);
+////						break;
+////					}
+//					if( (int)(i/3/lenght * 2) + x + radius * 2> lenght) {
+//						color = new Vector3f(0,0,0);
+//						break;
+//					}
+////					System.out.println((int)(i/3/lenght * 2)+ x+10+"    "+ lenght);
+//				}
+//				if(color.x == 0 && color.y == 0 && color.z == 0) {
+//					break;
+//				}
+//			}
+//			if(color.x == 0 && color.y == 0 && color.z == 0) {
+//				newColors[pointer] = green.x;
+//				newColors[pointer+1] = green.y;
+//				newColors[pointer+2] =  green.z;
+//			}else {
+//				newColors[pointer] = distance / maxDistance * (green.x - grey.x) + grey.x;
+//				newColors[pointer+1] =  distance / maxDistance * (green.y - grey.y) + grey.y;
+//				newColors[pointer+2] =  distance / maxDistance * (green.z - grey.z) + grey.z;
+//			}
 			
-			int change = i / 3;
-			int right = change + 1;
-			int left = change - 1;
-			int up = change + lenght;
-			int down = change - lenght;
-			
-			
-			int radius = 3;
-			float finalColor = 0;
-			for(int x = -radius; x < radius; x++) {
-				for(int z = -radius; z < radius; z++) {
-					float color;
-					try {
-						if(finalColor != 1)
-							finalColor = colors[(i / 3 + (x -2 )* lenght + z -2) * 3];
-					}catch(IndexOutOfBoundsException e) {
-						finalColor = 1;
-					}
-					System.out.println(finalColor + "    "+ (i / 3 + x * lenght + z - 2) * 3 + "    "+ x + "    "+ z);
-				}
-			}
-			newColors[pointer] = finalColor;
-			newColors[pointer+1] = finalColor;
-			newColors[pointer+2] = finalColor;
-			
-			
+		
+		
+		
 //			float floatChange = colors[change * 3];
 //			float floatRight, floatLeft, floatUp, floatDown, floatRD, floatRU, floatLD, floatLU;
 //			float floatRR, floatLL, floatUU, floatDD;
@@ -434,10 +519,10 @@ public class TerrainArea extends Entity{
 //			System.out.println(pointer+ "    "+ floatChange + "    "+ floatDown + "     "+ floatUp + "     " + floatLeft + "     "+ floatRight);
 //			
 			
-			pointer += 3;
-		}
+//			pointer += 3;
+//		}
 		
-		return newColors;
+		return colors;
 	}
 	
 	public float[] calculateNormals(float[] vertices) {
@@ -468,6 +553,8 @@ public class TerrainArea extends Entity{
 				newNormals[pointer+1] = res.y + offset;
 				newNormals[pointer+2] = res.z + offset;
 				
+				
+				
 				offset = r.nextFloat(0.1f) - 0.05f;
 				
 				p1 = new Vector3f(vertices[topLeft2 * 3], vertices[topLeft2 * 3+1], vertices[topLeft2 * 3+2]);
@@ -478,6 +565,7 @@ public class TerrainArea extends Entity{
 				newNormals[pointer+3] = res.x + offset;
 				newNormals[pointer+4] = res.y + offset;
 				newNormals[pointer+5] = res.z + offset;
+
 				
 				pointer += 6;
 			}
@@ -505,7 +593,7 @@ public class TerrainArea extends Entity{
 		return (Vector3f) new Vector3f(nx, ny, nz).normalise();
 	}
 	
-	private float getHeight(int x, int z) {
+	private float calculateHeight(int x, int z) {
 		
 		
 		if(x < 0 || x >= heightMap.getHeight() ||z < 0 || z >= heightMap.getHeight()) {
@@ -579,11 +667,10 @@ public class TerrainArea extends Entity{
 		int gridX = (int) Math.floor(terrainX / gridSquareSize);
 		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);
 		
+		
 		if(gridX >= heights.length - 1 || gridZ >= heights.length - 1 || gridX < 0 || gridZ < 0) {
 			return new Vector2f(0,0);
 		}
-
-		
 		
 		float distance1 = (float) Math.sqrt((terrainX - gridX * gridSquareSize) * (terrainX - gridX * gridSquareSize) + (terrainZ - gridZ * gridSquareSize) * (terrainZ - gridZ * gridSquareSize));
 		float distance2 = (float) Math.sqrt((terrainX - (gridX + 1) * gridSquareSize) * (terrainX - (gridX + 1) * gridSquareSize) + (terrainZ - gridZ * gridSquareSize) * (terrainZ - gridZ * gridSquareSize));
@@ -602,12 +689,29 @@ public class TerrainArea extends Entity{
 		else {
 			res = new Vector2f();
 		}
-		
 		return res;
 				
 	}
 	
-	public void setHeight(int worldX, int worldZ, float value, boolean inverted) {
+	public void setHeight(float worldX, float worldZ, float value, boolean inverted) {
+		
+		float terrainX = worldX - this.x;
+		float terrainZ = worldZ - this.z;
+		
+		int gridX = (int)(terrainX / gridSquareSize);
+		int gridZ = (int)(terrainZ / gridSquareSize);
+		
+		if(gridX >= heights.length - 1 || gridZ >= heights.length - 1 || gridX < 0 || gridZ < 0) {
+			return;
+		}
+		
+		if(!inverted)
+			heights[gridX][gridZ] += value;
+		else
+			heights[gridX][gridZ] -= value;
+	}
+	
+	public void setColor(int worldX, int worldZ, Vector3f value) {
 		
 		float terrainX = worldX - this.x;
 		float terrainZ = worldZ - this.z;
@@ -619,10 +723,18 @@ public class TerrainArea extends Entity{
 			return;
 		}
 		
-		if(!inverted)
-			heights[gridX][gridZ] += value;
-		else
-			heights[gridX][gridZ] -= value;
+		int lenght = heightMap.getHeight();
+		
+		int index = ((gridZ)* lenght + gridX) * 6;
+		
+		colors[index] = value.x;
+		colors[index + 1] = value.y;
+		colors[index + 2] = value.z;
+		
+		colors[index + 3] = value.x;
+		colors[index + 4] = value.y;
+		colors[index + 5] = value.z;
+		
 	}
 
 	public float[][] getHeightMap() {
@@ -632,6 +744,16 @@ public class TerrainArea extends Entity{
 
 	public String getHeightMapFile() {
 		return heightMapFile;
+	}
+	
+	
+	public float[] getColors() {
+		return colors;
+	}
+	
+	
+	public float getHeight(int gridX, int gridZ) {
+		return heights[gridX][gridZ];
 	}
 
 	

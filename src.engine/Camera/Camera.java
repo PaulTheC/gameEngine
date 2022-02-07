@@ -45,7 +45,7 @@ public class Camera extends Entity{
 	private float xStretching = (DisplayManager.WIDTH / (float) Display.getWidth());
 	
 	
-	public final float SPEED = 100;
+	public final float SPEED = 10;
 	public final float RAY_LENGHT = 50;
 	
 	public Camera(){

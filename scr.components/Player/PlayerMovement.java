@@ -8,8 +8,10 @@ import Components.Component;
 import Engine.DisplayManager;
 import Engine.Player;
 import Entiys.Entity;
+import Scenes.SceneManager;
 import Utilities.MouseHandler;
 import Utilities.Time;
+import testingScenes.TestScene;
 
 public class PlayerMovement extends Component{
 	
@@ -83,7 +85,7 @@ public class PlayerMovement extends Component{
 		
 		//Colision detection
 		
-		//position.y = SceneManager.<TestScene>getActiveScene().map.getHeightOfTerrain(position.x, position.z)+2;
+		position.y = SceneManager.<TestScene>getActiveScene().map.getHeightOfTerrain(position.x, position.z)+2;
 		//position = TestScene.sun.getPosition();
 		
 		cam.setRoll(roll);

@@ -50,5 +50,9 @@ public class Plane {
 		return new Entity(tModel, new Vector3f(0,0,0),0,0,0,1, Main.shader);
 		
 	}
+	
+	public static RawModel generateRawModel() {
+		return new RawModel(Loader.loadToVAO(vertices, textureCoords, indices, normals), indices.length);
+	}
 
 }

@@ -63,6 +63,14 @@ public class Loader {
 		return vaoID;
 	}
 	
+	public static int loadToVAO(float[] positions){
+		int vaoID = createVAO();
+		storeDataInAttributeList(0,2,positions);
+		
+		unbindVAO();
+		return vaoID;
+	}
+	
 	public static void updateVertexPositions(float[] positions, int voaID) {
 		
 		bindVAO(voaID);
@@ -75,6 +83,14 @@ public class Loader {
 		
 		bindVAO(voaID);
 		storeDataInAttributeList(2, 3, normals);
+		unbindVAO();
+		
+	}
+	
+	public static void updateVertexColors(float[] colors, int voaID) {
+		
+		bindVAO(voaID);
+		storeDataInAttributeList(3, 3, colors);
 		unbindVAO();
 		
 	}

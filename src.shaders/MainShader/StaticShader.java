@@ -46,6 +46,18 @@ public abstract class StaticShader {
 		ShaderMaster.addShader(this);
 	}
 	
+	public StaticShader(String vertexFile, String fragmentFile, boolean addedToRenderer) {
+		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
+		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
+		programID = GL20.glCreateProgram();
+		GL20.glAttachShader(programID, vertexShaderID);
+		GL20.glAttachShader(programID, fragmentShaderID);
+		bindAttributes();
+		GL20.glLinkProgram(programID);
+		GL20.glValidateProgram(programID);
+		getAllUniformLocations();
+	}
+	
 	public StaticShader(String vertexFile, String geometryFile,String fragmentFile) {
 		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
 		geometryShaderID = loadShader(geometryFile, GL32.GL_GEOMETRY_SHADER);
@@ -87,6 +99,7 @@ public abstract class StaticShader {
 
 	public void start() {
 		GL20.glUseProgram(programID);
+		GL11.glGetError();
 	}
 
 	public void stop() {
@@ -123,16 +136,19 @@ public abstract class StaticShader {
 	protected void bindAttribute(int attribute, String variableName) {
 		start();
 		GL20.glBindAttribLocation(programID, attribute, variableName);
+		GL11.glGetError();
 	}
 
 	protected void loadFloat(int location, float value) {
 		start();
 		GL20.glUniform1f(location, value);
+		GL11.glGetError();
 	}
 
 	protected void loadVector(int location, Vector3f vector) {
 		start();
 		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+		GL11.glGetError();
 	}
 
 	protected void loadBoolean(int location, boolean value) {
@@ -142,6 +158,7 @@ public abstract class StaticShader {
 			toLoad = 1;
 		}
 		GL20.glUniform1f(location, toLoad);
+		GL11.glGetError();
 	}
 
 	protected void loadMatrix(int location, Matrix4f matrix) {
@@ -149,6 +166,7 @@ public abstract class StaticShader {
 		matrixBuffer.flip();
 		start();
 		GL20.glUniformMatrix4(location, false, matrixBuffer);
+		GL11.glGetError();
 	}
 
 	private static int loadShader(String file, int type) {

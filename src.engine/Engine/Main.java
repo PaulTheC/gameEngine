@@ -12,13 +12,11 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import Camera.Camera;
-import Camera.MainCamera;
 import EntityPresets.Cube;
 import EntityPresets.Plane;
 import EntityShader.EnitiyShader;
 import Entiys.Entity;
 import Entiys.EntityMaster;
-import Entiys.Lamp;
 import Lamps.Lantern;
 import Lights.Light;
 import Lights.Sun;

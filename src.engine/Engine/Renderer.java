@@ -2,6 +2,7 @@ package Engine;
 
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -20,6 +21,8 @@ import MainShader.ShaderMaster;
 import MainShader.StaticShader;
 import Models.RawModel;
 import Models.TexturedModel;
+import Particles.Particle;
+import Particles.ParticleMaster;
 import Scenes.SceneManager;
 import Tools.Maths;
 import UIElements.UIElement;
@@ -39,6 +42,7 @@ public class Renderer {
 	public Renderer(Camera cam){
 		this.camera = cam;
 		generateProjectionMatrix();
+		new ParticleMaster(projectionMatrix);
 	}
 	
 
@@ -50,7 +54,12 @@ public class Renderer {
 
 
 	public void render() {
+		if(Keyboard.isKeyDown(Keyboard.KEY_S))
+			ParticleMaster.addParticle(new Particle(Player.getCamera().getPosition(), new Vector3f(0,40,0), 1, 4, 0, 0.5f));
 		
+		
+		//updating
+		ParticleMaster.update();
 		
 		//preparing
 
@@ -61,6 +70,7 @@ public class Renderer {
 		
 		//rendering
 		EntityMaster.renderAllEntitys(SceneManager.getActiveScene());
+		ParticleMaster.renderAllParticles();
 		UIElementsMaster.renderAllUIElements();
 		
 		//cleaning up

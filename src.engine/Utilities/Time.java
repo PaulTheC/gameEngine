@@ -32,7 +32,7 @@ public class Time {
 		if(secondsTimer > 1) {
 			//System.out.println("FPS: "+FPSCount);
 			
-			if(FPSCount < 55) System.out.println("FPS warning: "+FPSCount);
+			if(FPSCount < 40) System.out.println("FPS warning: "+FPSCount);
 			
 			FPSCount = 0;
 			secondsTimer = 0;

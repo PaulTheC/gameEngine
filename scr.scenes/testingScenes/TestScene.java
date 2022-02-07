@@ -30,21 +30,26 @@ public class TestScene extends Scene{
 		UIShader uiShader = new UIShader();
 		
 		map = new Map();
+		
 		sun = new Sun();
-		cube = new Entity("cube");
-
-		lantern = new Lantern();
-		lantern.increasePosition(1000, map.getHeightOfTerrain(300, 200)+1, 200);
-		
-		Lantern lantern2 = new Lantern();
-		lantern2.increasePosition(200, map.getHeightOfTerrain(200, 200)+1, 200);
-		
 		sun.addComponent(new SunMovement());
 		
+		cube = new Entity("cube");
+		cube.setScale(0.2f);
+
+//		lantern = new Lantern();
+//		lantern.increasePosition(1000, map.getHeightOfTerrain(300, 200)+1, 200);
+//		
+//		Lantern lantern2 = new Lantern();
+//		lantern2.increasePosition(200, map.getHeightOfTerrain(200, 200)+1, 200);
 		
 		UIElement crosshair = new UIElement("circle", uiShader);
 		crosshair.setScale(3);
 		crosshair.increasePosition(-crosshair.getModel().getTexture().getWidth() / crosshair.getScale() / 2, -crosshair.getModel().getTexture().getHeight() /crosshair.getScale() /2, 0);
+		
+		Entity dummy = new Entity("entitys/enemys/dummy/dummy", "entitys/enemys/dummy/dummy");
+		dummy.increasePosition(14, map.getHeightOfTerrain(14, 14)+1, 14);
+		
 		
 	}
 }

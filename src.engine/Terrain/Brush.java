@@ -6,12 +6,13 @@ import testingScenes.TestScene;
 
 public abstract class Brush {
 	
-	public abstract float[] apply(float worldX, float worldZ);
+	public abstract float[] applyHeight(float worldX, float worldZ);
+	public abstract float[] applyColors(float worldX, float worldZ);
 	
 	protected int toGridCoords(float x) {
 		
-		int gridSize = (int) Math.ceil(TestScene.map.getTerrainInGrid(100, 100).gridSquareSize);
-		return (int)Math.ceil(x / gridSize);
+		float gridSize = (float) (TestScene.map.getTerrainInGrid(100, 100).gridSquareSize);
+		return (int)(x / gridSize);
 		
 	}
 	
