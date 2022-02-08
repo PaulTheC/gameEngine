@@ -1,6 +1,7 @@
 package Engine;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -54,7 +55,9 @@ public class Renderer {
 
 
 	public void render() {
-		ParticleMaster.addParticle(new Particle(Player.getCamera().getPosition(), new Vector3f(0,40,0), 1, 4, 0, 0.5f));
+		Random r = new Random();
+		if(Keyboard.isKeyDown(Keyboard.KEY_Y))
+			ParticleMaster.addParticle(new Particle(new Vector3f(1,5,1), new Vector3f(r.nextFloat(4) - 2, 5 ,r.nextFloat(4) -2), 1, 10, 0, 0.5f));
 		
 		
 		//updating

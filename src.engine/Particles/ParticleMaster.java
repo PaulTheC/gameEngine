@@ -47,10 +47,8 @@ public class ParticleMaster {
 		for(Particle p: particles) {
 			updateModelViewMatrix(p.getPosition(), p.getRotation(), p.getScale(), viewMatrix);
 			GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-			GL11.glGetError();
 		}
 		finishRendering();
-		System.out.println(particles.size());
 	}
 	
 	public static void update() {
@@ -102,10 +100,9 @@ public class ParticleMaster {
 
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
-		GL11.glGetError();
 		GL20.glEnableVertexAttribArray(0);
-		GL11.glGetError();
 		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glCullFace(GL11.GL_FRONT);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDepthMask(false);
 		
@@ -114,6 +111,7 @@ public class ParticleMaster {
 	private static void finishRendering(){
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glCullFace(GL11.GL_BACK);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 		

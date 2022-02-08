@@ -57,7 +57,7 @@ public class Particle {
 		velocity.y += ParticleSystem.GRAVITY * gravityEffect * Time.deltaTime;
 		Vector3f change = new Vector3f(velocity);
 		change.scale(Time.deltaTime);
-//		Vector3f.add(change, position, position);
+		Vector3f.add(change, position, position);
 		age += Time.deltaTime;
 		return age < lifeTime;
 	}
