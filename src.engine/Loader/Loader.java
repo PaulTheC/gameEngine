@@ -71,6 +71,16 @@ public class Loader {
 		return vaoID;
 	}
 	
+	public static int loadToVAO(float[] positions,int[] indices){
+		int vaoID = createVAO();
+//		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0,2,positions);
+
+		
+		unbindVAO();
+		return vaoID;
+	}
+	
 	public static void updateVertexPositions(float[] positions, int voaID) {
 		
 		bindVAO(voaID);

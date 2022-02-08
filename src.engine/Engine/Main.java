@@ -37,6 +37,8 @@ import UIElements.UIElement;
 import UIShader.UIShader;
 import Utilities.MouseHandler;
 import Utilities.Time;
+import modelsP.ParticlesVao;
+import particlesP.ParticleSystem;
 import testingScenes.TestScene;
 
 public class Main {
@@ -64,6 +66,13 @@ public class Main {
 		Player.createPlayer();
 		
 		
+		//Particle Testing
+//		renderEngineP.Loader loader = new renderEngineP.Loader();
+//		renderEngineP.Renderer renderer2 = new renderEngineP.Renderer();
+//		ParticlesVao vao = ParticlesVao.create(loader);
+//		ParticleSystem particles = new ParticleSystem();
+//		
+		
 		SceneManager.getActiveScene().onStart();
 		
 		while(!DisplayManager.isCloseRequested()){
@@ -78,6 +87,15 @@ public class Main {
 			//render
 			renderer.prepare();
 			renderer.render();
+			
+			//render Particles
+			
+//			particles.update();
+//			vao.store(particles.getParticles());
+//			renderer2.prepare();
+//			renderer2.render(vao);
+			
+			
 			
 			//update Display
 			DisplayManager.resizeDisplay(Player.getCamera(), renderer, shader);

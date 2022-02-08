@@ -42,7 +42,6 @@ public class MouseHandler {
 		Mouse.setCursorPosition(500, 500);
 		
 		if(Mouse.isButtonDown(0) && !lastLeftDown) {
-//			Player.getCamera().leftMouseDown();		
 			Event.callEvent("leftMouseButtonDown");
 			lastLeftDown = true;
 		}
@@ -51,7 +50,6 @@ public class MouseHandler {
 			lastLeftDown = false;
 		}
 		if(Mouse.isButtonDown(1) && !lastRightDown) {
-//			Player.getCamera().rightMouseDown();
 			Event.callEvent("rightMouseButtonDown");
 			lastRightDown = true;
 		}

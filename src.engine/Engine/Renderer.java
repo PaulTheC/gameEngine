@@ -54,8 +54,7 @@ public class Renderer {
 
 
 	public void render() {
-		if(Keyboard.isKeyDown(Keyboard.KEY_S))
-			ParticleMaster.addParticle(new Particle(Player.getCamera().getPosition(), new Vector3f(0,40,0), 1, 4, 0, 0.5f));
+		ParticleMaster.addParticle(new Particle(Player.getCamera().getPosition(), new Vector3f(0,40,0), 1, 4, 0, 0.5f));
 		
 		
 		//updating

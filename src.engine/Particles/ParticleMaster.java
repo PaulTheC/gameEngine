@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import Engine.Player;
 import EntityPresets.Plane;
+import EntityPresets.Quad;
 import Loader.Loader;
 import Models.RawModel;
 import ParticleShader.ParticleShader;
@@ -32,8 +33,7 @@ public class ParticleMaster {
 	private static ParticleShader shader;
 	
 	public ParticleMaster(Matrix4f projectionMatrix){
-//		quad = new RawModel(Loader.loadToVAO(VERTICES), 2);
-		quad = Plane.generateRawModel();
+		quad = new RawModel(Loader.loadToVAO(VERTICES), 6);
 		shader = new ParticleShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -85,7 +85,7 @@ public class ParticleMaster {
 		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0,0,1), modelMatrix, modelMatrix);
 		Matrix4f.scale(new Vector3f(scale, scale, scale), modelMatrix, modelMatrix);
 		
-		Matrix4f modelViewMatrix = Matrix4f.mul(modelMatrix, viewMatrix, null);
+		Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix, null);
 		shader.loadModelViewMatrix(modelViewMatrix);
 	}
 
@@ -105,8 +105,8 @@ public class ParticleMaster {
 		GL11.glGetError();
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glGetError();
-//		GL11.glEnable(GL11.GL_BLEND);
-//		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDepthMask(false);
 		
 	}
