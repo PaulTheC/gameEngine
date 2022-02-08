@@ -85,7 +85,7 @@ public class PlayerMovement extends Component{
 		
 		//Colision detection
 		
-		position.y = SceneManager.<TestScene>getActiveScene().map.getHeightOfTerrain(position.x, position.z)+2;
+		//position.y = SceneManager.<TestScene>getActiveScene().map.getHeightOfTerrain(position.x, position.z)+2;
 		//position = TestScene.sun.getPosition();
 		
 		cam.setRoll(roll);
