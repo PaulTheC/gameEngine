@@ -31,7 +31,7 @@ public class DisplayManager {
 			Display.setResizable(true);
 			Display.setLocation(0, 0);
 			Display.setFullscreen(true);
-			Display.setVSyncEnabled(true);
+//			Display.setVSyncEnabled(true);
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			e.printStackTrace();

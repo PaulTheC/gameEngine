@@ -27,6 +27,7 @@ import Materials.StaticMaterial;
 import Materials.UIMaterial;
 import Models.RawModel;
 import Models.TexturedModel;
+import Particles.ParticleMaster;
 import Scenes.Scene;
 import Scenes.SceneManager;
 import Terrain.Map;

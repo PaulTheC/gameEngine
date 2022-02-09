@@ -157,7 +157,6 @@ public class EnitiyShader extends StaticShader{
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, entity.getModel().getTexture().getTextureID());
 		}
 		GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-
 		
 	}
 

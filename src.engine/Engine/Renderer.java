@@ -38,7 +38,7 @@ public class Renderer {
 	private Camera camera;
 	
 	
-	private Matrix4f projectionMatrix;
+	private static Matrix4f projectionMatrix;
 	
 	public Renderer(Camera cam){
 		this.camera = cam;
@@ -56,9 +56,9 @@ public class Renderer {
 
 	public void render() {
 		Random r = new Random();
-		if(Keyboard.isKeyDown(Keyboard.KEY_Y))
-			ParticleMaster.addParticle(new Particle(new Vector3f(1,5,1), new Vector3f(r.nextFloat(4) - 2, 5 ,r.nextFloat(4) -2), 1, 10, 0, 0.5f));
-		
+//		if(Keyboard.isKeyDown(Keyboard.KEY_Y))
+//			ParticleMaster.addParticle(new Particle(new Vector3f(1,5,1), new Vector3f(r.nextFloat(4) - 2, 5 ,r.nextFloat(4) -2), 1, 10, 0, 0.5f));
+//		
 		
 		//updating
 		ParticleMaster.update();
@@ -97,6 +97,12 @@ public class Renderer {
 	}
 
 	
+	
+	public static Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
+
+
 	public void generateProjectionMatrix() {
 		for(StaticShader shader: ShaderMaster.getList()) {
 			createProjectionMatrix();

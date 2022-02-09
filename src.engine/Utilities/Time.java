@@ -11,7 +11,7 @@ public class Time {
 	private static final long timeCreated = System.currentTimeMillis();
 	
 	public static void init() {
-		
+		lastTime = System.currentTimeMillis();
 	}
 	
 	
@@ -30,7 +30,7 @@ public class Time {
 		secondsTimer += deltaTime;
 		FPSCount++;
 		if(secondsTimer > 1) {
-			//System.out.println("FPS: "+FPSCount);
+			System.out.println("FPS: "+FPSCount);
 			
 			if(FPSCount < 40) System.out.println("FPS warning: "+FPSCount);
 			

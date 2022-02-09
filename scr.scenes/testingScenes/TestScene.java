@@ -36,6 +36,8 @@ public class TestScene extends Scene{
 		
 		cube = new Entity("cube");
 		cube.setScale(0.2f);
+		
+		
 
 //		lantern = new Lantern();
 //		lantern.increasePosition(1000, map.getHeightOfTerrain(300, 200)+1, 200);

@@ -211,5 +211,16 @@ public class Entity {
 	public boolean hasMesh() {
 		return hasMesh;
 	}
+	
+	public <T extends Component> T getComponent(Class<T> clazz){
+		
+		for(Component c: components) {
+			if(c.getClass().equals(clazz))
+				return (T) c;
+			
+		}
+		System.out.println("null");
+		return null;
+	}
 
 }

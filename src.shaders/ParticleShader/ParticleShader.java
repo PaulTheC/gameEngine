@@ -15,6 +15,13 @@ public class ParticleShader extends StaticShader {
 	private int location_modelViewMatrix;
 	private int location_projectionMatrix;
 
+	public ParticleShader(Matrix4f projectionMatrix) {
+		super(VERTEX_FILE, FRAGMENT_FILE);
+		start();
+		loadProjectionMatrix(projectionMatrix);
+		stop();
+	}
+	
 	public ParticleShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}

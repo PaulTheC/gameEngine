@@ -22,7 +22,7 @@ enum PlayerState{
 
 public class PlayerActionHandler extends Component{
 	
-	private PlayerState state = PlayerState.terraforming;
+	private PlayerState state = PlayerState.fighting;
 	private boolean inverted = false;
 
 	@Override
@@ -47,6 +47,7 @@ public class PlayerActionHandler extends Component{
 			break;
 			
 		case fighting:
+			Player.getCamera().<Fighter>getComponent(Fighter.class).fight();
 			break;
 			
 		default:

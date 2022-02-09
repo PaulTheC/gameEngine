@@ -2,6 +2,7 @@ package Engine;
 
 import Camera.Camera;
 import Lights.Light;
+import Player.Fighter;
 import Player.PlayerActionHandler;
 import Player.PlayerMovement;
 
@@ -15,6 +16,7 @@ public class Player {
 		cam = new Camera();
 		cam.addComponent(new PlayerMovement());
 		cam.addComponent(new PlayerActionHandler());
+		cam.addComponent(new Fighter());
 		
 		
 		light = new Light();

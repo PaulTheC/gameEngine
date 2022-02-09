@@ -31,6 +31,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import Engine.DisplayManager;
 import Models.RawModel;
 import Models.TexturedModel;
+import Particles.ParticleTexture;
 import Textures.ModelTexture;
 
 public class Loader {
@@ -128,6 +129,31 @@ public class Loader {
 			System.out.println("The size of the image "+ fileName+" is not a power of 2. Black lines might occur!");
 		return new ModelTexture(texture.getTextureID(), texture.getImageHeight(), texture.getImageWidth(), fileName);
 	}
+	
+	public static ParticleTexture loadParticleTexture(String fileName) {
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Tried to load texture " + fileName + ".png, didn't work");
+			System.exit(-1);
+		}
+		textures.add(texture.getTextureID());
+		
+		
+		int n = texture.getImageHeight();
+		
+		
+		//checking if n is a power of 2 
+		if((int)(Math.ceil((Math.log(n) / Math.log(2)))) != (int)(Math.floor(((Math.log(n) / Math.log(2))))))
+			System.out.println("The size of the image "+ fileName+" is not a power of 2. Black lines might occur!");
+		return new ParticleTexture(texture.getTextureID());
+	}
+	
 	
 	public static void cleanUp(){
 		for(int vao:vaos){

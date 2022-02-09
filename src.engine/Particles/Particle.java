@@ -1,6 +1,5 @@
 package Particles;
 
-
 import org.lwjgl.util.vector.Vector3f;
 
 import Utilities.Time;
@@ -13,20 +12,20 @@ public class Particle {
 	private float lifeTime;
 	private float rotation;
 	private float scale;
-	
+
+	private ParticleTexture texture;
+
 	private float age = 0;
 
-	public Particle(Vector3f position, Vector3f velocity, float gravityEffect, float lifeLenght, float rotation,
-			float scale) {
-		super();
+	public Particle(ParticleTexture texture, Vector3f position, Vector3f velocity, float gravityEffect,
+			float lifeLenght, float rotation, float scale) {
+		this.texture = texture;
 		this.position = new Vector3f(position.x, position.y, position.z);
 		this.velocity = velocity;
 		this.gravityEffect = gravityEffect;
 		this.lifeTime = lifeLenght;
 		this.rotation = rotation;
 		this.scale = scale;
-		
-		ParticleMaster.addParticle(this);
 	}
 
 	public float getAge() {
@@ -45,6 +44,10 @@ public class Particle {
 		return lifeTime;
 	}
 
+	public ParticleTexture getTexture() {
+		return texture;
+	}
+
 	public float getRotation() {
 		return rotation;
 	}
@@ -52,16 +55,15 @@ public class Particle {
 	public float getScale() {
 		return scale;
 	}
-	
+
 	protected boolean update() {
-		velocity.y += ParticleSystem.GRAVITY * gravityEffect * Time.deltaTime;
+		velocity.y += 1 * gravityEffect * Time.deltaTime;
 		Vector3f change = new Vector3f(velocity);
 		change.scale(Time.deltaTime);
 		Vector3f.add(change, position, position);
 		age += Time.deltaTime;
+
 		return age < lifeTime;
 	}
-	
-	
-	
+
 }
