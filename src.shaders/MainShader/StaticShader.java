@@ -11,6 +11,7 @@ import javax.xml.stream.events.StartDocument;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.vector.Matrix3f;
@@ -89,10 +90,10 @@ public abstract class StaticShader {
 
 	protected int getUniformLocation(String uniformName) {
 		int location = GL20.glGetUniformLocation(programID, uniformName);
-		if (location == -1)
-			System.err.println("\nCoundn´t locate uniform Variable " + uniformName
-					+ "\nThis occurrs when uniform isn´t use in the shader or the name is spelled incorrectly\n");
-		
+		if (location == -1) {
+//			System.err.println("\nCoundn´t locate uniform Variable " + uniformName
+//					+ "\nThis occurrs when uniform isn´t use in the shader or the name is spelled incorrectly\n");
+		}
 		
 		return location;
 	}
@@ -132,6 +133,45 @@ public abstract class StaticShader {
 			i++;
 		}
 	}
+	
+	public void loadTextureToUniform(int textureId, int textureLocation, int uniformLocation) {
+		float i = 1;
+		if(textureLocation > 8)
+			//throw NotImplementedException
+			i = i / 0;
+		
+		switch(textureLocation) {
+		case 0:
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			break;
+		case 1:
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			break;
+		case 2:
+			GL13.glActiveTexture(GL13.GL_TEXTURE2);
+			break;
+		case 3:
+			GL13.glActiveTexture(GL13.GL_TEXTURE3);
+			break;
+		case 4:
+			GL13.glActiveTexture(GL13.GL_TEXTURE4);
+			break;
+		case 5:
+			GL13.glActiveTexture(GL13.GL_TEXTURE5);
+			break;
+		case 6:
+			GL13.glActiveTexture(GL13.GL_TEXTURE6);
+			break;
+		case 7:
+			GL13.glActiveTexture(GL13.GL_TEXTURE7);
+			break;
+		case 8:
+			GL13.glActiveTexture(GL13.GL_TEXTURE8);
+			break;
+		}
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+		loadInt(uniformLocation, textureLocation);
+	}
 
 	protected void bindAttribute(int attribute, String variableName) {
 		start();
@@ -142,7 +182,11 @@ public abstract class StaticShader {
 	protected void loadFloat(int location, float value) {
 		start();
 		GL20.glUniform1f(location, value);
-		GL11.glGetError();
+	}
+	
+	protected void loadInt(int location, int value) {
+		start();
+		GL20.glUniform1i(location, value);
 	}
 
 	protected void loadVector(int location, Vector3f vector) {
@@ -170,12 +214,31 @@ public abstract class StaticShader {
 	}
 
 	private static int loadShader(String file, int type) {
+		StringBuilder shaderVersion = new StringBuilder();
+		
+		
 		StringBuilder shaderSource = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				shaderSource.append(line).append("//\n");
+				if(line.startsWith("#version")) {
+					shaderVersion.append("#version 430//\n");
+					shaderSource.append("//\n");
+				}else
+					shaderSource.append(line).append("//\n");
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		StringBuilder lib = new StringBuilder();
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("src.shaders/MainShader/lib.txt"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				lib.append(line).append("//\n");
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -183,7 +246,7 @@ public abstract class StaticShader {
 			System.exit(-1);
 		}
 		int shaderID = GL20.glCreateShader(type);
-		GL20.glShaderSource(shaderID, shaderSource);
+		GL20.glShaderSource(shaderID, new CharSequence[] {shaderVersion, lib, shaderSource});
 		GL20.glCompileShader(shaderID);
 		if (GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));

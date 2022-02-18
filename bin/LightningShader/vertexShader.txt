@@ -12,6 +12,6 @@ void main(void){
 	textureCoords = position + vec2(0.5, 0.5);
 	textureCoords.y = 1.0 - textureCoords.y;
 
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 0.0, 1.0);
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 0.0, 1.0); 
 
 }

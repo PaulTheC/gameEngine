@@ -15,4 +15,8 @@ public class ShaderMaster {
 		return list;
 	}
 
+	public static void removeShader(StaticShader shader) {
+		list.remove(shader);
+	}
+	
 }

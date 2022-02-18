@@ -6,6 +6,7 @@ import Colisions.Raycast;
 import Components.Component;
 import Entiys.Entity;
 import ParticleEffects.LightningEffect;
+import ParticleEffects.LightningV2;
 import Particles.ParticleSystem;
 
 enum SelectedWeapon {
@@ -16,7 +17,7 @@ enum SelectedWeapon {
 public class Fighter extends Component{
 	
 	private SelectedWeapon weapon = SelectedWeapon.Lightning;
-	private LightningEffect lightningEffect;
+	private LightningV2 lightningEffect;
 	
 	public void fight() {
 		
@@ -25,7 +26,8 @@ public class Fighter extends Component{
 		switch(weapon) {
 		
 		case Lightning:
-			lightningEffect = new LightningEffect(target);
+			if(target != null)
+				lightningEffect = new LightningV2(target);
 			break;
 			
 		default:

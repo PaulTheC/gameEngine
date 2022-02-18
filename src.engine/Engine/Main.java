@@ -9,6 +9,7 @@ import javax.xml.stream.events.StartDocument;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import Camera.Camera;
@@ -67,23 +68,26 @@ public class Main {
 		Player.createPlayer();
 		
 		
-		//Particle Testing
-//		renderEngineP.Loader loader = new renderEngineP.Loader();
-//		renderEngineP.Renderer renderer2 = new renderEngineP.Renderer();
-//		ParticlesVao vao = ParticlesVao.create(loader);
-//		ParticleSystem particles = new ParticleSystem();
-//		
-		
+
 		SceneManager.getActiveScene().onStart();
 		
+		long cpu = 0;
+		long gpu = 0;
+		int i = 0;
+	
+		
 		while(!DisplayManager.isCloseRequested()){
+			long cpuNanos = System.nanoTime();
 			
+			
+			//updating
+			ParticleMaster.update();
 			SceneManager.getActiveScene().onUpdate();
-			
-
 			MouseHandler.mouseUpdate();
 			
+			cpuNanos -= System.nanoTime();
 			
+			long gpuNanos = System.nanoTime();
 			
 			//render
 			renderer.prepare();
@@ -91,21 +95,29 @@ public class Main {
 			
 			//render Particles
 			
-//			particles.update();
-//			vao.store(particles.getParticles());
-//			renderer2.prepare();
-//			renderer2.render(vao);
-			
-			
-			
 			//update Display
 			DisplayManager.resizeDisplay(Player.getCamera(), renderer, shader);
 			DisplayManager.updateDisplay();
 			
+			gpuNanos -= System.nanoTime();
+			
 			//analysing
 			Time.onUpdate();
+//			System.out.println("CPU: "+ cpuNanos + "      GPU: "+ gpuNanos);
+//			GL11.glFlush();
+			
+			
+			cpu -= cpuNanos;
+			gpu -= gpuNanos;
+			i ++;
+			if(i == 100) {
+				i= 1;
+				cpu = 0;
+				gpu = 0;
+			}
+			
 		}
-
+		System.out.println("CPU: "+ cpu / i / 1000+ " ns     GPU: "+ gpu / i / 1000 + " ns     Frames: "+ i);
 		
 		shader.destroy();
 		Loader.cleanUp();
@@ -116,5 +128,6 @@ public class Main {
 		System.exit(0);
 		
 	}
+
 	
 }

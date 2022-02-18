@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -129,6 +130,7 @@ public class Loader {
 			System.out.println("The size of the image "+ fileName+" is not a power of 2. Black lines might occur!");
 		return new ModelTexture(texture.getTextureID(), texture.getImageHeight(), texture.getImageWidth(), fileName);
 	}
+	
 	
 	public static ParticleTexture loadParticleTexture(String fileName) {
 		Texture texture = null;

@@ -55,13 +55,11 @@ public class Renderer {
 
 
 	public void render() {
+		long time = System.nanoTime() * -1;
 		Random r = new Random();
 //		if(Keyboard.isKeyDown(Keyboard.KEY_Y))
 //			ParticleMaster.addParticle(new Particle(new Vector3f(1,5,1), new Vector3f(r.nextFloat(4) - 2, 5 ,r.nextFloat(4) -2), 1, 10, 0, 0.5f));
 //		
-		
-		//updating
-		ParticleMaster.update();
 		
 		//preparing
 
@@ -69,6 +67,7 @@ public class Renderer {
 			shader.loadLights(LightMaster.getLightArray());
 		}
 		
+//		System.out.println("loading: "+ (time + System.nanoTime()));
 		
 		//rendering
 		EntityMaster.renderAllEntitys(SceneManager.getActiveScene());
@@ -76,7 +75,6 @@ public class Renderer {
 		UIElementsMaster.renderAllUIElements();
 		
 		//cleaning up
-		
 		
 	}
 	

@@ -16,8 +16,8 @@ import Engine.Player;
 import EntityPresets.Plane;
 import EntityPresets.Quad;
 import Loader.Loader;
+import MainShader.ParticleShader;
 import Models.RawModel;
-import ParticleShader.ParticleShader;
 import Tools.Maths;
 import Particles.Particle;
 
@@ -34,7 +34,7 @@ public class ParticleMaster {
 	private static ParticleTexture defaultTexture;
 	
 	public ParticleMaster(Matrix4f projectionMatrix){
-		quad = new RawModel(Loader.loadToVAO(VERTICES), 6);
+		quad = new RawModel(Loader.loadToVAO(VERTICES), 4);
 		
 		defaultTexture = Loader.loadParticleTexture("particleTextures/defaultParticle");
 		
@@ -43,6 +43,7 @@ public class ParticleMaster {
 	public static void renderAllParticles(){
 		Matrix4f viewMatrix = Maths.createViewMatrix(Player.getCamera());
 		for(ParticleSystem p: particleSystems) {
+			p.getShader().loadPerSystemUniforms(p);
 			p.render(viewMatrix);
 		}
 		finishRendering();
@@ -57,7 +58,6 @@ public class ParticleMaster {
 //				p.destroy();				
 				iterator.remove();
 		}
-		System.out.println(particleSystems.size());
 	}
 	
 	public static void addParticleSystem(ParticleSystem system) {
@@ -84,6 +84,7 @@ public class ParticleMaster {
 		GL11.glCullFace(GL11.GL_BACK);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
 }

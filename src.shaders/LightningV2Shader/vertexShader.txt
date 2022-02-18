@@ -1,0 +1,18 @@
+#version 140
+
+in vec2 position;
+
+out vec2 geo_textureCoords;
+
+uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+
+void main(void){
+
+	
+	
+	geo_textureCoords = position + vec2(0.5, 0.5);
+	geo_textureCoords.y = 1.0 - geo_textureCoords.y;
+
+
+}

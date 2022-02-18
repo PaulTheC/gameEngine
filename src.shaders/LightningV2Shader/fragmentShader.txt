@@ -1,0 +1,21 @@
+#version 140
+
+in vec2 frag_textureCoords;
+in vec4 frag_color;
+
+out vec4 out_colour;
+
+uniform float time;
+uniform float sinTime;
+uniform float age;
+
+uniform sampler2D particleTexture;
+uniform sampler2D noiseTexture;
+
+
+void main(void){
+	
+	float gradient = step(1- age * 1.5, frag_textureCoords.y);
+	
+	out_colour = vec4(0.69,0.85,1,gradient);
+}

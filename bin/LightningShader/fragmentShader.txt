@@ -1,0 +1,32 @@
+#version 140
+
+in vec2 textureCoords;
+
+out vec4 out_colour;
+
+uniform float time;
+uniform float sinTime;
+uniform float age;
+uniform float timeCreated;
+
+uniform sampler2D particleTexture;
+uniform sampler2D noiseTexture;
+
+
+void main(void){
+
+	float width = 0.04f;
+
+	float displacement = noise(vec2(time * 7, textureCoords.y * 5) *0.5) + noise(vec2(time * 7, textureCoords.y * 5) *10) / 40;
+	float stepDisplacement = noise(vec2(textureCoords.y,textureCoords.y - time * 7) * 5) / 15 + noise(vec2(textureCoords.y,textureCoords.y - time * 2) * 5) / 20 ;
+
+	vec4 color = vec4(1,1,0,step(textureCoords.y, age * 2));
+	
+	//out_colour = step(min(1-width, 0.99f), distanceToInt(textureCoords.x)) * color;
+	//out_colour = vec4(1,1,1,noise((textureCoords * 10)));
+	//out_colour = vec4(1,1,1,noise(vec2(time * 3, textureCoords.y) * 10));
+	
+	float c = noise(textureCoords * 10 + timeCreated);
+	out_colour = vec4(c, c, c, 0.1);
+
+}

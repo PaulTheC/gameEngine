@@ -46,6 +46,8 @@ public class Time {
 	}
 	
 	
+	
+	
 	public static float getTimeAlive() {
 		return (float)(System.currentTimeMillis() - timeCreated) / 1000f;
 	}
